@@ -17,7 +17,7 @@ const login = async (signingKey, signingSecret) => {
   setStorageCredentials(signingKey, signingSecret);
 }
 
-const logout = async () => setStorageCredentials(storageCredentials.signingKey, null);
+const logout = async () => setStorageCredentials(storageCredentials.signingKey, null, null, null);
 
 const createUser = async () => {
   const { signingKey, signingSecret, encryptionKey, encryptionSecret } = await auth.create();

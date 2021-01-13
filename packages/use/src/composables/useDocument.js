@@ -7,8 +7,6 @@ import useAuthentication from './useAuthentication';
 const { createConcord, concord, tree, closeConcord, commit } = useConcord();
 const { storageCredentials, signingKey } = useAuthentication();
 
-const shouldSave = ref(false);
-
 const tasks = ref([]);
 const log = ref([]);
 const doc = ref({});
@@ -63,18 +61,10 @@ const loadDocument = async (tree) => {
   );
 }
 
-const commitDocument = async () => {
-  await commit();
-}
-
 export default () => ({
-  concord,
-  shouldSave,
-  tasks,
-  log,
   document: doc,
   isValid,
-  commit: commitDocument,
+  commit,
   createDocument,
   loadDocument,
   fetchDocument,
