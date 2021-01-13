@@ -11,9 +11,4 @@ export default {
     '@teamconcords/ui-kit': path.resolve(__dirname, '../ui-kit')
   },
   plugins: [vue()],
-  build: {
-    rollupOptions: {
-      external: ['vue'],
-    },
-  }
 }
