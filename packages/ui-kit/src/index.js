@@ -1,0 +1,1 @@
+export { default as Authenticated } from './components/Authenticated.vue';

@@ -1,0 +1,32 @@
+{
+  "name": "@teamconcords/core",
+  "version": "0.4.9",
+  "description": "Core layer for Concords apps.",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": "git://github.com/teamconcords/core.git",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.json -w",
+    "test": "ava src/**/*.test.ts",
+    "test:watch": "ava src/**/*.test.ts --watch",
+    "prepublish": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hyperactiv": "^0.8.4",
+    "idb": "^5.0.7",
+    "tslib": "^2.0.3"
+  },
+  "devDependencies": {
+    "@ava/typescript": "^1.1.1",
+    "ava": "^3.13.0",
+    "ts-node": "^9.0.0",
+    "tslint": "^6.1.3",
+    "tslint-config-airbnb": "^5.11.2",
+    "typescript": "^4.1.2"
+  }
+}
