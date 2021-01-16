@@ -1,10 +1,10 @@
 module.exports = {
   purge: ['./index.html', './src/**/*.{vue,js}'],
-  darkMode: false,
+  darkMode: true,
   theme: {
     extend: {
       fontFamily: {
-        serif: ["Rajdhani", "sans-serif"],
+        serif: [ "Rajdhani", "sans-serif" ],
       },
     }
   },

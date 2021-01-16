@@ -7,10 +7,10 @@ import useAuthentication from './useAuthentication';
 const { createConcord, concord, tree, closeConcord, commit } = useConcord();
 const { storageCredentials, signingKey } = useAuthentication();
 
-const tasks = ref([]);
 const log = ref([]);
 const doc = ref({});
 const isValid = ref(false);
+const documents = ref([]);
 
 watch(tree, async () => {
   if (tree.value) {
@@ -19,7 +19,6 @@ watch(tree, async () => {
 
   if (concord.value) {
     const { get, transactionLog } = unref(concord);
-    tasks.value = await get('task');
     log.value = await transactionLog();
     doc.value = (await get('document'))[0];
   }
@@ -44,9 +43,11 @@ const createDocument = async ({ name }) => {
     storageCredentials.key,
     signingKey,
     tree,
-    ['task'],
+    [],
     () => {}
   );
+
+  setDocuments();
 }
 
 const loadDocument = async (tree) => {
@@ -56,17 +57,25 @@ const loadDocument = async (tree) => {
     storageCredentials.key,
     signingKey,
     tree,
-    ['task'],
+    [],
     () => {}
   );
+
+  setDocuments();
+}
+
+const setDocuments = () => {
+  documents.value = Object.keys(sessionStorage).filter((val) => val !== 'active-doc').map((val) => JSON.parse(sessionStorage.getItem(val)))
 }
 
 export default () => ({
   document: doc,
+  documents,
   isValid,
   commit,
   createDocument,
   loadDocument,
   fetchDocument,
   closeDocument: closeConcord,
+  setDocuments,
 });

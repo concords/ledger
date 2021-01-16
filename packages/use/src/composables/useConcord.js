@@ -32,7 +32,7 @@ const createConcord = async (
     unref(key),
     unref(signingKey),
     unref(tree),
-    [...objectStores, 'owner', 'document'],
+    [...objectStores, 'permissions', 'document'],
     reactiveCallback,
   );
   isLoading.value = false;

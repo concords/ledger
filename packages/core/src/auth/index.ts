@@ -28,7 +28,7 @@ export const create = async (): Promise<Object> => {
   };
 }
 
-export const login = (jwk: string, key: JsonWebKey): Promise<CryptoKey> => {
+export const importSigningKey = (jwk: string, key: JsonWebKey): Promise<CryptoKey> => {
   if (!jwk) {
       return;
   }
@@ -46,7 +46,37 @@ export const login = (jwk: string, key: JsonWebKey): Promise<CryptoKey> => {
   );
 }
 
-export const verify = (publicKey, signature, transaction) =>
+export const importEncryptionKey = (jwk: string, key: JsonWebKey): Promise<CryptoKey> => {
+  if (!jwk) {
+      return;
+  }
+  
+  delete key.key_ops;
+
+  return crypto.subtle.importKey(
+    'jwk',
+    { ...key, d: jwk },
+    {
+        name: 'ECDH',
+        namedCurve: "P-384",
+    },
+    true,
+    ["deriveKey", "deriveBits"]
+  );
+}
+
+export const verifySignature = (publicKey, signature, transaction) =>
+  crypto.subtle.verify(
+      {
+          name: "ECDSA",
+          hash: {name: "SHA-384"},
+      },
+      publicKey,
+      signature,
+      transaction,
+  );
+
+  export const verifyEncryptionKey = (publicKey, signature, transaction) =>
   crypto.subtle.verify(
       {
           name: "ECDSA",

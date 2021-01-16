@@ -3,9 +3,9 @@ import { auth } from '@teamconcords/core';
 
 const signingKey = ref(null);
 
-async function getSigningKey(key, jwk) {
+async function setSigningKey(key, jwk) {
   if (key && jwk) {
-    signingKey.value = await auth.login(jwk, key);
+    signingKey.value = await auth.importSigningKey(jwk, key);
   } else {
     signingKey.value = false;
   }
@@ -13,5 +13,5 @@ async function getSigningKey(key, jwk) {
 
 export default () => ({
   signingKey,
-  getSigningKey
+  setSigningKey
 });

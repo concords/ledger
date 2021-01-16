@@ -1,0 +1,20 @@
+{
+  "name": "identity",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "tailwindcss": "^2.0.2",
+    "vue": "^3.0.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.0.4",
+    "@vue/compiler-sfc": "^3.0.5",
+    "eslint": "^7.17.0",
+    "eslint-plugin-vue": "^7.4.1",
+    "vite": "^2.0.0-beta.12",
+    "vite-plugin-pwa": "^0.3.6"
+  }
+}

@@ -1,8 +1,6 @@
 <template>
-  <section>
-    <slot name="logged-in" v-if="isAuthenticated"/>
-    <slot v-else name="not-logged-in"/>
-  </section>
+  <slot name="logged-in" v-if="isAuthenticated"/>
+  <slot v-else name="not-logged-in"/>
 </template>
 
 <script>
