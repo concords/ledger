@@ -7,7 +7,10 @@
     <authenticated>
       <template #logged-in>
         <div class="flex-1">
-          <profile v-bind="{ signingKey, encryptionKey }" />
+          <profile
+            :signing-key="signingKey"
+            :encryption-key="encryptionKey"
+          />
         </div>
         <button
           class="block bg-red-500 text-white py-1 px-4 rounded w-64 mx-auto"

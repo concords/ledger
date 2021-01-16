@@ -6,6 +6,8 @@
     "packages/*"
   ],
   "scripts": {
+    "docs:dev": "yarn --cwd packages/site docs:dev",
+    "docs:build": "yarn --cwd packages/site docs:build",
     "playground:dev": "yarn --cwd packages/playground dev",
     "playground:build": "yarn --cwd packages/playground build",
     "identity:dev": "yarn --cwd packages/identity dev",
