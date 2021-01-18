@@ -65,6 +65,7 @@ const loadDocument = async (tree) => {
 }
 
 const setDocuments = () => {
+
   documents.value = Object.keys(sessionStorage).filter((val) => val !== 'active-doc').map((val) => JSON.parse(sessionStorage.getItem(val)))
 }
 

@@ -11,7 +11,10 @@
     "playground:dev": "yarn --cwd packages/playground dev",
     "playground:build": "yarn --cwd packages/playground build",
     "identity:dev": "yarn --cwd packages/identity dev",
-    "identity:build": "yarn --cwd packages/identity build"
+    "identity:build": "yarn --cwd packages/identity build",
+    "use:dev": "yarn --cwd packages/use dev",
+    "use:build": "yarn --cwd packages/use build",
+    "build:core": "vite build --target lib --name my-components"
   },
   "dependencies": {
     "@fontsource/rajdhani": "^4.1.0",
