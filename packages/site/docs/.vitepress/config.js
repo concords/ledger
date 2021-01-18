@@ -44,6 +44,7 @@ function getGuideSidebar() {
       children: [
         { text: 'What is Concords?', link: '/guide/what-is-concords', activeMatch: '^/guide/what-is-concords/', },
         { text: 'Getting Started', link: '/guide/getting-started' },
+        { text: 'Concepts', link: '/guide/concepts' },
       ]
     },
   ]
