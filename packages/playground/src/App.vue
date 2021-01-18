@@ -3,7 +3,7 @@
     <h1 class="text-3xl">
       Concords Playground
     </h1>
-
+    <auth />
     <authenticated>
       <template #logged-in>
         <concord @close="closeActiveDoc" />
@@ -38,8 +38,10 @@ import { watch } from 'vue';
 import { Authenticated, Concord } from '@teamconcords/ui-kit';
 import { useAuthentication, useDocument, useConcord } from '@teamconcords/use';
 
+import Auth from './components/Auth.vue';
+
 export default {
-  components: { Authenticated, Concord },
+  components: { Authenticated, Concord, Auth },
   setup() {
     const { create, logout, isAuthenticated } = useAuthentication();
     const { createDocument, closeDocument, documents, setDocuments, loadDocument } = useDocument();

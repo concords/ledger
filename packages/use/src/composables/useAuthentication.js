@@ -1,7 +1,7 @@
 import { watch, ref } from 'vue';
 import useStorageCredentials from './useStorageCredentials';
 import useSigningKey from './useSigningKey';
-import useEncryptionKey from './useEncryptionKey';
+import useEncryptionKey from './useEncryption';
 import { auth } from '@teamconcords/core';
 
 const { storageCredentials, setStorageCredentials, getStorageCredentials } = useStorageCredentials();

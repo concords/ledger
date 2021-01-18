@@ -5,13 +5,13 @@
 Install the core package 
 
 ```bash
-npm install @teamconcords/core --save
-# yarn add @teamconcords/core
+npm install @concords/core --save
+# yarn add @concords/core
 ```
 ## Identity
 
 ```typescript
-import { auth } from '@teamconcords/core';
+import { auth } from '@concords/core';
 
 const { create, importSigningKey } = auth;
 
@@ -26,7 +26,7 @@ const activeSigningKey = await importSigningKey(signingKey, signingSecret);
 ## Document
 
 ```typescript
-import { document } from '@teamconcords/core';
+import { document } from '@concords/core';
 
 const { create, verify, load } = document;
 

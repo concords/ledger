@@ -2,7 +2,7 @@
 home: true
 # heroImage: /logo.png
 heroAlt: Logo image
-heroText: A storage agnostic, Javascript data framework.
+heroText: An immutable Javascript data ledger.
 tagline: Build web apps with cryptographically secured state, that plug into your exisiting storage solutions.
 actionText: Get Started
 actionLink: /guide/what-is-concords
