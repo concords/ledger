@@ -50,7 +50,7 @@ This key is used to log the user into the app and only a valid key combination c
 
 For my MVP, this is more than sufficient to complete and decent authentication flow. We can have a recognisable UX of profile/password combination to build a login system, whilst setting us up for an encrypted, multi-user, data flow.
 
-![](/flows/signup.gif?raw=true)
+![](/flows/signup.gif)
 
 ---
 
@@ -79,7 +79,7 @@ Knowing roughly what I needed to build to prove out the concept, and having alre
 
 By default, a new user doesn't have edit access to a document. For the purpose of the MVP, we've got a "Join" button in the left-hand sidebar. Clicking this will add the user as an entry to the data store and unlock editing. This covers the concept enough for now, but we are able to achieve direct encryption with the public/private key authentication, so that's going to be an interesting avenue to explore further outside of the MVP context.
 
-![](/flows/third-user.gif?raw=true)
+![](/flows/third-user.gif)
 
 ---
 
@@ -123,13 +123,13 @@ Sitting on the other side of the blockchain is the DB layer. When a transaction 
 
 As long as we have the blockchain data object, we have a full picture of our app and data state. We can drop and recreate a database with complete accuracy, based on secured transactional history. This is a __read only__ layer.
 
-![](/flows/recreate-db.gif?raw=true)
+![](/flows/recreate-db.gif)
 
 ---
 
 #### Architecture Overview
 
-![](../architecture.svg)
+![](/architecture.svg)
 
 ---
 

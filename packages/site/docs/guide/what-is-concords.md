@@ -5,3 +5,5 @@ Concords is an immutable Javascript data ledger for building offline-first & ser
 Todo List App example: [https://open.concords.app](https://open.concords.app)
 
 ![](/architecture.svg)
+
+![](/logo.png)
