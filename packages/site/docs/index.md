@@ -1,17 +1,17 @@
 ---
 home: true
-# heroImage: /logo.png
+heroImage: /logo.png
 heroAlt: Logo image
-heroText: An immutable Javascript data ledger.
-tagline: Build web apps with cryptographically secured state, that plug into your exisiting storage solutions.
+heroText: An immutable Javascript data ledger
+tagline: Build offline-first web apps, that plug into your exisiting cloud solutions.
 actionText: Get Started
 actionLink: /guide/what-is-concords
 features:
-- title: Serverless & Offline-First;
-  details: Minimal setup with markdown-centered project structure helps you focus on writing.
+- title: Serverless & Offline-First; Connectivity as an enhancement.
+  details: Server actions are considered an add-on for a Concords app. The library functions completely offline and in the browser.
 - title: Merkle-Tree; A cryptographically secured data ledger
-  details: Enjoy the dev experience of Vue + webpack, use Vue components in markdown, and develop custom themes with Vue.
-- title: Decentralized; User owned data with end-to-end encryption
-  details: VitePress generates pre-rendered static HTML for each page, and runs as an SPA once a page is loaded.
+  details: As seen in Git and Blockchain implementations, Concords uses a cryptographically secured Merkle Tree to provide integrity in an immutable data ledger.
+- title: Decentralized; User owned data, by default.
+  details: Using an immutable document structure makes Concords decentralized by default. It's not necessary to pass data through a complex cloud infrastructure.
 footer: GNU Licensed | Copyright © 2019-present Team Concords Limited.
 ---
