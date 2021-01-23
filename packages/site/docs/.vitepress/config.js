@@ -4,7 +4,7 @@ module.exports = {
   description: 'Vite & Vue powered static site generator.',
 
   themeConfig: {
-    repo: 'teamconcords/concords',
+    repo: 'teamconcords',
     docsDir: 'docs',
 
     editLinks: true,
@@ -32,6 +32,18 @@ module.exports = {
 
     sidebar: {
       '/guide/': getGuideSidebar(),
+      '/blog/': [
+        {
+          text: 'Blog',
+          children: [
+            {
+              text: 'What is Concords?',
+              link: '/blog/what-is-concords',
+              activeMatch: '^/blog/what-is-concords/',
+            },
+          ]
+        },
+      ],
       '/': getGuideSidebar()
     }
   }
