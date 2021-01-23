@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: /logo.png
+heroImage: ./logo.png
 heroAlt: Logo image
 heroText: An immutable Javascript data ledger
 tagline: Build offline-first web apps, that plug into your exisiting cloud solutions.
