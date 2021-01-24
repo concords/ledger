@@ -5,6 +5,7 @@ import {
   verifySignature,
   verifyEncryptionKey
 } from './auth';
+
 import { create, mine, is_chain_valid } from './blockchain';
 import { start } from './runtime';
 

@@ -65,7 +65,7 @@ export const importEncryptionKey = (jwk: string, key: JsonWebKey): Promise<Crypt
   );
 }
 
-export const verifySignature = (publicKey, signature, transaction) =>
+export const verifySignature = (publicKey, signature, transaction): Promise<Boolean> =>
   crypto.subtle.verify(
       {
           name: "ECDSA",
