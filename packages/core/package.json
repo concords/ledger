@@ -18,7 +18,7 @@
     "test:watch": "ava src/**/*.test.ts --watch",
     "prepublish": "npm run build-lib",
     "build-lib": "npm run build && rollup --config rollup.config.js",
-    "docs": "npm run build && typedoc dist/index.ts dist/authentication.ts"
+    "docs": "npm run build && typedoc dist/ledger.ts dist/authentication.ts"
   },
   "author": "team@concords.app",
   "license": "GNU",
