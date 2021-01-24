@@ -1,4 +1,26 @@
-export const create = async (): Promise<Object> => {
+
+export interface AuthKeys {
+  signingSecret: string,
+  signingKey: JsonWebKey,
+  encryptionKey: JsonWebKey,
+  encryptionSecret: string,
+};
+
+
+/**
+ * Creat Signing and Encryption Key pairs
+ *
+ * ```typescript
+ * const {
+ *   signingKey: CryptoKey,
+ *   signingSecret: CryptoKey,
+ * } = await create();
+ *
+ * const activeSigningKey: CryptoKey =
+ *   await importSigningKey(signingKey, signingSecret);
+ * ```
+ */
+export const create = async (): Promise<AuthKeys> => {
   const signingKey = await crypto.subtle.generateKey(
     { name: "ECDSA", namedCurve: "P-384" },
     true,

@@ -1,7 +1,8 @@
 export {
-  create as generate,
+  create,
   importSigningKey,
   importEncryptionKey,
   verifySignature,
-  verifyEncryptionKey
+  verifyEncryptionKey,
+  AuthKeys
 } from './auth';
