@@ -1,9 +1,9 @@
 import hyperactiv from 'hyperactiv';
 import { createDb, createDbApi, ActionsKeys, Actions } from '../data';
-import { add_transaction, Blockchain, Block, Transaction, TransactionBase, mine } from '../blockchain';
+import { add_transaction, Blockchain, Block, Transaction, TransactionBase, mine } from '../ledger';
 import { encode, decode, hash_data, signTransaction } from '../utils';
 
-const { observe, computed } = hyperactiv;
+const { observe, computed, watch } = hyperactiv;
 
 interface TransactionSync {
     hasRan: boolean;
@@ -82,6 +82,31 @@ export const createApi = () => ({
     },
 });
 
+interface Concord {};
+
+const observed = observe({
+    ledger: null,
+    events: {},
+});
+
+export const load = async (
+        ledger: Blockchain
+    ) =>  {
+        observed.ledger = ledger;
+        observed.events['load:ledger'](ledger);
+
+        watch(observed.ledger, (oldLedger, newLedger) => {
+            observed.events['update:ledger'](oldLedger, newLedger);
+        });
+    }
+
+export const registerEvents = ({ events }) => {
+    observed.events = Object.entries(events).reduce((acc, [key, event]) => ({
+        ...acc,
+        [key]: event
+    }), {});
+}
+
 export const start = async (user: Object, signingKey: CryptoKey, blockchain: Blockchain, objectStores: Array<string>, watch: Function) => {
     const db = await createDb(blockchain.id, 1,
         objectStores.map((name) => ({ name, config: { keyPath: 'id' }})));
@@ -102,6 +127,7 @@ export const start = async (user: Object, signingKey: CryptoKey, blockchain: Blo
 
         const transactionLog = await dbApi.get('key_store', {}, 'transaction_log');
         const transactions = await getNewTransactions(cleanBlockchain, transactionLog || []);
+
         await syncDb(transactions, dbApi, transactionLog || []);
 
         // set a dirty flag for external reactivity;

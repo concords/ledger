@@ -1,19 +1,20 @@
 
+export interface Identity {
+  x: string,
+  y: string,
+}
 export interface AuthKeys {
   signingSecret: string,
-  signingKey: JsonWebKey,
-  encryptionKey: JsonWebKey,
-  encryptionSecret: string,
+  signingKey: Identity,
 };
-
 
 /**
  * Creat Signing and Encryption Key pairs
  *
  * ```typescript
  * const {
- *   signingKey: CryptoKey,
- *   signingSecret: CryptoKey,
+ *   signingKey: Identity,
+ *   signingSecret: string,
  * } = await create();
  *
  * const activeSigningKey: CryptoKey =
@@ -27,38 +28,43 @@ export const create = async (): Promise<AuthKeys> => {
     ["sign", "verify"]
   );
 
-  const encryptionKey = await window.crypto.subtle.generateKey(
-    {
-      name: "ECDH",
-      namedCurve: "P-384"
-    },
-    true,
-    ["deriveKey"]
-  );
-
   const publicSigningKey: JsonWebKey = await crypto.subtle.exportKey('jwk', signingKey.publicKey) as JsonWebKey;
   const privateSigningKey: JsonWebKey = await crypto.subtle.exportKey('jwk', signingKey.privateKey) as JsonWebKey;
 
-  const publicEncryptionKey: JsonWebKey = await crypto.subtle.exportKey('jwk', encryptionKey.publicKey) as JsonWebKey;
-  const privateEncryptionKey: JsonWebKey = await crypto.subtle.exportKey('jwk', encryptionKey.privateKey) as JsonWebKey;
-
   return {
     signingSecret: privateSigningKey.d,
-    signingKey: publicSigningKey,
-    encryptionKey: publicEncryptionKey,
-    encryptionSecret: privateEncryptionKey.d,
+    signingKey: { x: publicSigningKey.x, y: publicSigningKey.y },
   };
 }
 
-export const importSigningKey = (jwk: string, key: JsonWebKey): Promise<CryptoKey> => {
-  if (!jwk) {
+// const publicEncryptionKey: JsonWebKey = await crypto.subtle.exportKey('jwk', encryptionKey.publicKey) as JsonWebKey;
+//   const privateEncryptionKey: JsonWebKey = await crypto.subtle.exportKey('jwk', encryptionKey.privateKey) as JsonWebKey;
+
+// const encryptionKey = await window.crypto.subtle.generateKey(
+//   {
+//     name: "ECDH",
+//     namedCurve: "P-384"
+//   },
+//   true,
+//   ["deriveKey"]
+// );
+
+
+export const importSigningKey = (
+    signingKey: Identity,
+    signingSecret: string
+  ): Promise<CryptoKey> => {
+  if (!signingKey || !signingSecret) {
       return;
   }
-  delete key.key_ops;
 
   return crypto.subtle.importKey(
     'jwk',
-    { ...key, d: jwk },
+    {
+      crv: "P-384",
+      ext: true,
+      kty: "EC",
+      ...signingKey, d: signingSecret },
     {
         name: 'ECDSA',
         namedCurve: "P-384",

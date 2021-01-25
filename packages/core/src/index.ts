@@ -1,25 +1,7 @@
-import {
-  create as generate,
-  importSigningKey,
-  importEncryptionKey,
-  verifySignature,
-  verifyEncryptionKey
-} from './auth';
-
-import { create, mine, is_chain_valid } from './blockchain';
-import { start } from './runtime';
-
-export const auth = {
-  create: generate,
-  importSigningKey,
-  importEncryptionKey,
-  verifySignature,
-  verifyEncryptionKey,
-}
-
-export const document = {
+export {
   create,
-  load: start,
-  commit: mine,
-  verify: is_chain_valid
-};
+  importSigningKey,
+  verifySignature,
+} from './identity';
+
+export * as default from './concord';
