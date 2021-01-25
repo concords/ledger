@@ -83,7 +83,7 @@ export async function mine(blockchain: Blockchain): Promise<Blockchain> {
     }
 }
 
-export function is_chain_valid(chain: Array<Block>) {
+function is_chain_valid(chain: Array<Block>) {
     for (let i = 1; i < chain.length; i++) {
         const current_block = chain[i];
         const previous_block = chain[i - 1];
@@ -123,7 +123,7 @@ async function add_block(
 };
 
 
-export function create_block(
+function create_block(
     transactions: Array<Transaction> = [],
     previous_hash: string = '0'
     ): Block {
@@ -136,21 +136,22 @@ export function create_block(
         }
 };
 
-export function create_blockchain(
-    difficulty: number = 1,
-    pending_transactions: Array<Transaction> = [],
-    chain: Array<Block> = []
-    ): Blockchain {
 
-        return {
-            difficulty,
-            pending_transactions: [...pending_transactions],
-            chain: [...chain],
-            id: '',
-        };
+function create_blockchain(
+  difficulty: number = 1,
+  pending_transactions: Array<Transaction> = [],
+  chain: Array<Block> = []
+): Blockchain {
+
+  return {
+    difficulty,
+    pending_transactions: [...pending_transactions],
+    chain: [...chain],
+    id: '',
+  };
 };
 
-export async function create_genesis_block(data): Promise<Block> {
+async function create_genesis_block(data): Promise<Block> {
 
     const timestamp = Date.now();
     const id = await hash_data(`${JSON.stringify(data.creator_key)}_${timestamp}`);
@@ -179,7 +180,7 @@ export async function create(genesis_data: Object, difficulty: number): Promise<
     return blockchain;
 };
 
-export function consensus(blockchains: Array<Blockchain>): Blockchain {
+function consensus(blockchains: Array<Blockchain>): Blockchain {
     let longestChain: Blockchain = blockchains[0];
 
     blockchains.forEach((blockchain) => {
