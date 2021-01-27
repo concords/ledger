@@ -70,6 +70,22 @@ export const importSigningKey = (
   );
 }
 
+/**
+ * Export Identity
+ *
+ * ```typescript
+ * const signingKey: CryptoKey = await importSigningKey(identity, secret);
+ * ```
+ */
+export const exportIdentity = async (
+  signingKey: CryptoKey,
+): Promise<Identity> => {
+  const publicSigningKey: JsonWebKey
+    = await crypto.subtle.exportKey('jwk', signingKey) as JsonWebKey;
+
+  return { x: publicSigningKey.x, y: publicSigningKey.y };
+}
+
 
 /**
  * Sign

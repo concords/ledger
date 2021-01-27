@@ -1,45 +1,32 @@
-import hyperactiv from 'hyperactiv';
 import { add_transaction, Blockchain, TransactionBase } from './ledger';
-import { sign } from './identity';
+import { exportIdentity, sign } from './identity';
 import { hash_data } from './utils';
 
-const { observe } = hyperactiv;
+export default () => {
+  const state = {
+    ledger: null,
+  };
 
-const state = observe({
-  ledger: {},
-  loaded: false,
-});
+  const events = {
+    'load:ledger': [],
+    'update:ledger': [],
+    'unload:ledger': [],
+    'create:transaction': [],
+    'update:transaction': [],
+    'delete:transaction': []
+  };
 
-const events = {
-  'load:ledger': (ledger) => {},
-  'update:ledger': (ledger) => {},
-  'unload:ledger': () => {},
-  'create:transaction': (ledger) => {},
-  'update:transaction': (ledger) => {},
-  'delete:transaction': (ledger) => {},
-};
-
-const load = async (ledger: Blockchain) =>  {
-  state.ledger = ledger;
-  events['load:ledger'](ledger);
-}
-
-const registerEvents = (eventsOpts: Object) => {
-  Object.entries(eventsOpts).forEach(([key, value]) => {
-    events[key] = value;
-  });
-}
-
-const addTransaction = async (
+  const addTransaction = async (
     type: string,
     action: string,
     transaction: Object,
-    identity: JsonWebKey,
     signingKey: CryptoKey
   ) => {
     if (!['create', 'update', 'delete'].includes(action)) {
       return;
     }
+
+    const identity = await exportIdentity(signingKey);
 
     const timestamp = Date.now();
     const id = await hash_data(`${JSON.stringify(identity)}_${timestamp}`);
@@ -49,29 +36,52 @@ const addTransaction = async (
         id,
         timestamp,
     };
-
-    const signature = await sign(signingKey, data);
     
     const signedTransaction = {
       type,
       action,
       data,
       user: identity,
-      signature
     }
 
-    state.ledger = await add_transaction(signedTransaction, state.ledger);
-    events[`${action}:transaction`](signedTransaction);
-    events['update:ledger'](state.ledger);
+    const signature = await sign(signingKey, data);
 
-    return transaction;
-}
+    state.ledger = await add_transaction({
+      signature,
+      ...signedTransaction
+    }, state.ledger);
 
-export default () => {
+    events[`${action}:transaction`].forEach(({ action }) => action(signedTransaction));
+    events['update:ledger'].forEach(({ action }) => action(state.ledger));
+  }
+  
+  const load = async (ledger: Blockchain) =>  {
+    events['load:ledger'].forEach(({ action }) => action(ledger));
+    state.ledger = ledger;
+  }
+  
+  const registerHooks = (eventsOpts: Object) => {
+    Object.entries(eventsOpts).forEach(([key, value]) => {
+      events[key] = value;
+    });
+  }
+
+  const createRecord = async (type, data, signingKey) => {
+    await addTransaction(type, 'create', data, signingKey);
+  }
+  const updateRecord = async (type, data, signingKey) => {
+    await addTransaction(type, 'update', data, signingKey);
+  }
+  const deleteRecord = async (type, data, signingKey) => {
+    await addTransaction(type, 'delete', data, signingKey);
+  }
+  
   return {
     load,
-    registerEvents,
+    registerHooks,
 
-    addTransaction,
+    createRecord,
+    updateRecord,
+    deleteRecord,
   }
 }
