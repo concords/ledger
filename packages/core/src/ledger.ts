@@ -1,4 +1,5 @@
-import { hash_data, signTransaction } from './utils/index';
+import { sign } from './identity';
+import { hash_data } from './utils';
 
 export interface TransactionBase {
     id: string;
@@ -155,7 +156,7 @@ async function create_genesis_block(data): Promise<Block> {
 
     const timestamp = Date.now();
     const id = await hash_data(`${JSON.stringify(data.creator_key)}_${timestamp}`);
-    const signature = await signTransaction(data.signingKey, { timestamp, id });
+    const signature = await sign(data.signingKey, { timestamp, id });
 
     const genesis_block = create_block([{
         action: 'create',

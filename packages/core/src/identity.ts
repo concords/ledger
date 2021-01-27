@@ -1,3 +1,4 @@
+import { encode } from './utils';
 
 export interface Identity {
   x: string,
@@ -16,18 +17,20 @@ export interface AuthKeys {
  *   identity: Identity,
  *   secrte: string,
  * } = await create();
- *
  * ```
  */
 export const create = async (): Promise<AuthKeys> => {
-  const signingKey = await crypto.subtle.generateKey(
+  const { publicKey, privateKey} = await crypto.subtle.generateKey(
     { name: "ECDSA", namedCurve: "P-384" },
     true,
     ["sign", "verify"]
   );
 
-  const publicSigningKey: JsonWebKey = await crypto.subtle.exportKey('jwk', signingKey.publicKey) as JsonWebKey;
-  const privateSigningKey: JsonWebKey = await crypto.subtle.exportKey('jwk', signingKey.privateKey) as JsonWebKey;
+  const publicSigningKey: JsonWebKey
+    = await crypto.subtle.exportKey('jwk', publicKey) as JsonWebKey;
+  
+    const privateSigningKey: JsonWebKey
+    = await crypto.subtle.exportKey('jwk', privateKey) as JsonWebKey;
 
   return {
     secret: privateSigningKey.d,
@@ -36,19 +39,18 @@ export const create = async (): Promise<AuthKeys> => {
 }
 
 /**
- * Import active Signing Key
+ * Import Signing Key
  *
  * ```typescript
- * const signingKey = await importSigningKey(identity, secret);
- *
+ * const signingKey: CryptoKey = await importSigningKey(identity, secret);
  * ```
  */
 export const importSigningKey = (
-    identity: Identity,
-    secret: string
-  ): Promise<CryptoKey> => {
+  identity: Identity,
+  secret: string
+): Promise<CryptoKey> => {
   
-    if (!identity || !secret) {
+  if (!identity || !secret) {
       return;
   }
 
@@ -70,14 +72,46 @@ export const importSigningKey = (
 
 
 /**
+ * Sign
+ *
+ * ```typescript
+ * const signature: string = await sign(signingKey, data);
+ * ```
+ */
+export const sign = async (
+  signingKey: CryptoKey,
+  data: Object
+) : Promise<string> => {
+  
+  const dataBuffer = await encode(data);
+  const signatureBuffer = await crypto.subtle.sign(
+      {
+          name: "ECDSA",
+          hash: {
+              name: "SHA-384"
+          },
+      },
+      signingKey,
+      dataBuffer,
+  );
+  
+  const u8 = new Uint8Array(signatureBuffer);
+  return btoa(String.fromCharCode.apply(null, u8));
+};
+
+
+/**
  * Verify signature
  *
  * ```typescript
- * const signingKey = await importSigningKey(identity, secret);
- *
+ * const isSignatureValid: Boolean = await verifySignature(identity, signature, data);
  * ```
  */
-export const verifySignature = async (identity: Identity, signature, data: Object): Promise<Boolean> => {
+export const verifySignature = async (
+    identity: Identity,
+    signature: string,
+    data: Object
+  ): Promise<Boolean> => {
   const key = await crypto.subtle.importKey(
     'jwk',
     {
@@ -106,44 +140,3 @@ export const verifySignature = async (identity: Identity, signature, data: Objec
     u8data,
 );
 }
-
-// const importEncryptionKey = (jwk: string, key: JsonWebKey): Promise<CryptoKey> => {
-//   if (!jwk) {
-//       return;
-//   }
-  
-//   delete key.key_ops;
-
-//   return crypto.subtle.importKey(
-//     'jwk',
-//     { ...key, d: jwk },
-//     {
-//         name: 'ECDH',
-//         namedCurve: "P-384",
-//     },
-//     true,
-//     ["deriveKey", "deriveBits"]
-//   );
-// }
-// const publicEncryptionKey: JsonWebKey = await crypto.subtle.exportKey('jwk', encryptionKey.publicKey) as JsonWebKey;
-//   const privateEncryptionKey: JsonWebKey = await crypto.subtle.exportKey('jwk', encryptionKey.privateKey) as JsonWebKey;
-
-// const encryptionKey = await window.crypto.subtle.generateKey(
-//   {
-//     name: "ECDH",
-//     namedCurve: "P-384"
-//   },
-//   true,
-//   ["deriveKey"]
-// );
-
-  // const verifyEncryptionKey = (publicKey, signature, transaction) =>
-  // crypto.subtle.verify(
-  //     {
-  //         name: "ECDSA",
-  //         hash: {name: "SHA-384"},
-  //     },
-  //     publicKey,
-  //     signature,
-  //     transaction,
-  // );

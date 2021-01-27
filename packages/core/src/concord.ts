@@ -1,6 +1,7 @@
 import hyperactiv from 'hyperactiv';
 import { add_transaction, Blockchain, TransactionBase } from './ledger';
-import { hash_data, signTransaction } from './utils';
+import { sign } from './identity';
+import { hash_data } from './utils';
 
 const { observe } = hyperactiv;
 
@@ -49,7 +50,7 @@ const addTransaction = async (
         timestamp,
     };
 
-    const signature = await signTransaction(signingKey, data);
+    const signature = await sign(signingKey, data);
     
     const signedTransaction = {
       type,

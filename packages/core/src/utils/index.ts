@@ -23,20 +23,6 @@ export async function hash_data(data: Object): Promise<string> {
     const hash_array = get_hash_array(hash_buffer);
     return get_hash_hex(hash_array);
 }
-export const signTransaction = async (privateKey: CryptoKey, transaction) => {
-    const buffer = await encode(transaction);
-    const signatureBuffer = await window.crypto.subtle.sign(
-        {
-            name: "ECDSA",
-            hash: {
-                name: "SHA-384"
-            },
-        },
-        privateKey,
-        buffer,
-    );
-    var u8 = new Uint8Array(signatureBuffer);
-    return btoa(String.fromCharCode.apply(null, u8));
-};
+
 
 

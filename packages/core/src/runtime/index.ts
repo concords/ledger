@@ -1,7 +1,8 @@
 import hyperactiv from 'hyperactiv';
 import { createDb, createDbApi, ActionsKeys, Actions } from '../data';
 import { add_transaction, Blockchain, Block, Transaction, TransactionBase, mine } from '../ledger';
-import { encode, decode, hash_data, signTransaction } from '../utils';
+import { hash_data } from '../utils';
+import { sign } from '../identity';
 
 const { observe, computed, watch } = hyperactiv;
 
@@ -55,7 +56,7 @@ export const createApi = () => ({
             timestamp,
         };
 
-        const signature = await signTransaction(jwk, data);
+        const signature = await sign(jwk, data);
         return add_transaction({ type, action: 'create', data, user, signature }, blockchain);
     },
     update: async (type: string, obj: TransactionBase, blockchain: Blockchain, user: Object, jwk: CryptoKey) => {
@@ -66,7 +67,7 @@ export const createApi = () => ({
             timestamp,
         };
 
-        const signature = await signTransaction(jwk, data);
+        const signature = await sign(jwk, data);
         return add_transaction({ type, action: 'update', data, user, signature }, blockchain);
     },
     delete: async (type: string, obj: TransactionBase, blockchain: Blockchain, user: Object, jwk: CryptoKey) => {
@@ -77,7 +78,7 @@ export const createApi = () => ({
             timestamp,
         };
 
-        const signature = await signTransaction(jwk, data);
+        const signature = await sign(jwk, data);
         return add_transaction({ type, action: 'delete', data, user, signature }, blockchain);
     },
 });
