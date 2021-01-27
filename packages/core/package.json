@@ -17,7 +17,7 @@
     "test": "ava src/**/*.test.ts",
     "test:watch": "ava src/**/*.test.ts --watch",
     "prepublish": "npm run build-lib",
-    "build-lib": "npm run build && rollup --config rollup.config.js",
+    "build-lib": "npm run build",
     "docs": "typedoc src/index.ts src/ledger.ts src/identity.ts src/concord.ts"
   },
   "author": "team@concords.app",
