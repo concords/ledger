@@ -15,7 +15,7 @@ export interface AuthKeys {
  * ```typescript
  * const {
  *   identity: Identity,
- *   secrte: string,
+ *   secret: string,
  * } = await create();
  * ```
  */
@@ -154,5 +154,5 @@ export const verifySignature = async (
     key,
     u8signature,
     u8data,
-);
+  );
 }

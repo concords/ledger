@@ -1,4 +1,4 @@
-import { add_transaction, Blockchain, TransactionBase } from './ledger';
+import { add_transaction, create, Blockchain, TransactionBase } from './ledger';
 import { exportIdentity, sign } from './identity';
 import { hash_data } from './utils';
 
@@ -8,6 +8,7 @@ export default () => {
   };
 
   const events = {
+    'create:ledger': [],
     'load:ledger': [],
     'update:ledger': [],
     'unload:ledger': [],
@@ -49,15 +50,15 @@ export default () => {
     state.ledger = await add_transaction({
       signature,
       ...signedTransaction
-    }, state.ledger);
+    }, { ...state.ledger });
 
-    events[`${action}:transaction`].forEach(({ action }) => action(signedTransaction));
-    events['update:ledger'].forEach(({ action }) => action(state.ledger));
+    events[`${action}:transaction`].forEach((action) => action(signedTransaction));
+    events['update:ledger'].forEach((action) => action(state.ledger));
   }
   
-  const load = async (ledger: Blockchain) =>  {
-    events['load:ledger'].forEach(({ action }) => action(ledger));
+  const loadLedger = async (ledger: Blockchain) =>  {
     state.ledger = ledger;
+    events['load:ledger'].forEach(({ action }) => action(ledger));
   }
   
   const registerHooks = (eventsOpts: Object) => {
@@ -75,9 +76,15 @@ export default () => {
   const deleteRecord = async (type, data, signingKey) => {
     await addTransaction(type, 'delete', data, signingKey);
   }
+
+  const createLedger = async (data, signingKey) => {
+    state.ledger = await create({ ...data, signingKey }, 4);
+    events['create:ledger'].forEach((action) => action(state.ledger));
+  }
   
   return {
-    load,
+    loadLedger,
+    createLedger,
     registerHooks,
 
     createRecord,
