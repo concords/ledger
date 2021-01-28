@@ -22,9 +22,12 @@ const events = {
 These hooks can be used to update state, send API requests, update IndexedDB.
 
 ```javascript
-  import { createIdentity } from '@concords/identity';
-  import { concords } from '@concords/core'
+  import { createIdentity } from '@concords/core/identity';
+  import { ledger } from '@concords/core/ledger'
 
+  const { identity, secret } = await createIdentity();
+  const signingKey = await importSigningKey(identity, secret);
+  
   const {
     createLedger,
     loadLedger,
@@ -32,7 +35,7 @@ These hooks can be used to update state, send API requests, update IndexedDB.
     updateRecord,
     destroyLedger,
     registerHooks,
-  } = concords();
+  } = ledger();
 
   registerHooks({
     'create:ledger': [
@@ -46,8 +49,7 @@ These hooks can be used to update state, send API requests, update IndexedDB.
         (data) => api.post('endpoint', data),
     ],
   });
+  
 
   createLedger({ title: 'Document Name' }, signingKey);
 ```
-
-## concords/core
