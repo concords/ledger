@@ -7,9 +7,8 @@ import { VitePWA } from 'vite-plugin-pwa';
  */
 export default {
   alias: {
-    '@teamconcords/use': path.resolve(__dirname, '../use'),
-    '@teamconcords/core': path.resolve(__dirname, '../core'),
-    '@teamconcords/ui-kit': path.resolve(__dirname, '../ui-kit')
+    '@concords/core': path.resolve(__dirname, '../core'),
+    '@concords/vue-kit': path.resolve(__dirname, '../vue-kit')
   },
   plugins: [
     vue(),

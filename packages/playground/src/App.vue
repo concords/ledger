@@ -1,87 +1,73 @@
 <template>
   <div>
-    <h1 class="text-3xl">
-      Concords Playground
-    </h1>
-    <auth />
-    <authenticated>
-      <template #logged-in>
-        <concord @close="closeActiveDoc" />
-        <button
-          class="bg-blue-500 text-white py-2 px-4"
-          @click="createDocument"
-        >
-          Create Document
-        </button>
-        
-        <button
-          class="block bg-red-500 text-white py-2 px-4"
-          @click="logout"
-        >
-          Logout
-        </button>
-      </template>
-      <template #not-logged-in>
-        <button
-          class="bg-blue-500 text-white py-2 px-4"
-          @click="create"
-        >
-          Create Some Keys
-        </button>
-      </template>
-    </authenticated>
+    <button v-if="!authKeys" @click="createUser" class="bg-green-400">
+      Create Identity
+    </button>
+    <button v-if="!ledger && authKeys" @click="create">
+      Create Ledger
+    </button>
+    <div v-if="ledger">
+      <button @click="addAdminUser">
+        Add Admin User
+      </button>
+      <pre>{{ JSON.stringify(ledger, null, 2, 2) }}</pre>
+    </div>
   </div>
 </template>
 
 <script>
-import { watch } from 'vue';
-import { Authenticated, Concord } from '@teamconcords/ui-kit';
-import { useAuthentication, useDocument, useConcord } from '@teamconcords/use';
-
-import Auth from './components/Auth.vue';
+import { ref, watch, unref, onMounted } from 'vue';
+import concords from '@concords/core/src/concord';
+import { create as createIdentity, importSigningKey } from '@concords/core/src/identity';
 
 export default {
-  components: { Authenticated, Concord, Auth },
   setup() {
-    const { create, logout, isAuthenticated } = useAuthentication();
-    const { createDocument, closeDocument, documents, setDocuments, loadDocument } = useDocument();
-    const { concord } = useConcord();
+    const { registerHooks, createRecord, createLedger } = concords();
+    
+    const ledger = ref(null);
+    const authKeys = ref(null);
+    const signingKey = ref(null);
 
-    const openDocument = (id) => {
-      if (concord.value) {
-        const { close } = concord.value;
-        close();
-      }
-      const doc = JSON.parse(sessionStorage.getItem(id))
-      if (doc) {
-        loadDocument(doc.tree);
-      }
+    watch(authKeys, async ({ identity, secret }) => {
+      signingKey.value = await importSigningKey(identity, secret);
+    });
+
+    const createUser = async () => {
+      authKeys.value = await createIdentity();
     }
 
-    const closeActiveDoc = () => {
-      const { close } = concord.value;
-      closeDocument();
-      close();
-      sessionStorage.removeItem('active-doc');
-    };
-
-    watch(isAuthenticated, (isAuth) => {
-      if (!isAuth) {
-        return;
-      }
-      const activeDoc = sessionStorage.getItem('active-doc');
-      if (activeDoc) {
-        openDocument(activeDoc);
-      }
+    registerHooks({
+      'create:ledger': [
+          (newLedger) => ledger.value = newLedger
+      ],
+      'update:ledger': [
+          (newLedger) => ledger.value = newLedger
+      ],
     })
 
+    const addAdminUser = async (value) => {
+      createRecord(
+        'user',
+        {
+          type: 'admin',
+          identity: unref(authKeys).identity,
+          permissions: [],
+        },
+        unref(signingKey)
+      );
+    }
+
+    const create = () => 
+      createLedger({ data: 1 }, unref(signingKey));
+
+
     return {
+      addAdminUser,
+      createUser,
       create,
-      logout,
-      createDocument,
-      documents,
-      closeActiveDoc,
-    };
+      ledger,
+      authKeys,
+    }
   },
 };
 </script>

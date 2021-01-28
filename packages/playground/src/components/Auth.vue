@@ -2,11 +2,11 @@
   <div>hi</div>
 </template>
 <script>
-import { auth } from '@concords/core';
+// import { auth } from '@concords/core';
 
 export default {
   setup() {
-    console.log(auth);
+    // console.log(auth);
   }
 }
 </script>
