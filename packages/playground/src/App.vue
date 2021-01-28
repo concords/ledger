@@ -43,7 +43,7 @@ export default {
       'update:ledger': [
           (newLedger) => ledger.value = newLedger
       ],
-    })
+    });
 
     const addAdminUser = async (value) => {
       createRecord(
