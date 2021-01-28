@@ -4,4 +4,4 @@ export {
   verifySignature,
 } from './identity';
 
-export * as default from './concord';
+export * as default from './ledger';

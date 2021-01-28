@@ -1,5 +1,5 @@
 import { openDB, IDBPDatabase } from 'idb';
-import { TransactionBase } from '../ledger';
+import { TransactionBase } from '../blockchain';
 
 export interface Actions {
     create(type: string, obj: Object, id?: string): Promise<any>;

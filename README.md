@@ -8,46 +8,74 @@
 The concords runtime uses an event based plugin system.
 
 ```javascript
-const events = {
-  'create:ledger': [],
-  'load:ledger': [],
-  'update:ledger': [],
-  'unload:ledger': [],
-  'create:transaction': [],
-  'update:transaction': [],
-  'delete:transaction': []
-};
+const plugin = () => {
+  return {
+    created(ledger) {},
+    loaded(ledger) {},
+    updated(ledger) {},
+    unloaded(ledger) {},
+    updateRecord({ type, data }) {},
+    createRecord({ type, data }) {},
+    deleteRecord({ type, data }) {},
+  }
+}
 ```
 
 These hooks can be used to update state, send API requests, update IndexedDB.
 
 ```javascript
-  import { createIdentity } from '@concords/identity';
-  import { concords } from '@concords/core'
-
-  const {
-    createLedger,
-    loadLedger,
-    createRecord,
-    updateRecord,
-    destroyLedger,
-    registerHooks,
-  } = concords();
-
-  registerHooks({
-    'create:ledger': [
-        (ledger) => console.log(ledger),
-    ],
-    'update:ledger': [
-        (ledger) => console.log(ledger),
-    ],
-    'create:transaction': [
-        (data) => console.log(data),
-        (data) => api.post('endpoint', data),
-    ],
+const useTodoPlugin = () => {
+  const store = reactive({
+    loaded: false,
+    todos: [],
   });
 
-  createLedger({ title: 'Document Name' }, signingKey);
+  return {
+    store,
+    plugin: {
+      loaded(ledger) {
+        store.loaded = true;
+      },
+      createRecord({ type, data }) {
+        store.todos = [...store.todos, data];
+      },
+    }
+  };
+}
+
+const todo = useTodoPlugin();
+
+const { createRecord } = ledger({
+  identity: props.identity,
+  secret: props.secret,
+  plugins: [todo.plugin],
+});
+
+function createTodo() {
+  createRecord('todos', { title: 'Hi There' })
+}
+
+return {
+  ...toRefs(todo.store),
+  createTodo
+}
+```
+
+```javascript
+import ledger from '@concords/core/src/ledger';
+
+const { createRecord } = ledger({
+  ...auth,
+  plugins: [
+    plugin(),
+  ],
+});
+
+...
+
+createRecord('table_name', { title: 'data info' }) {
+
+},
 ```
 
 ## concords/core

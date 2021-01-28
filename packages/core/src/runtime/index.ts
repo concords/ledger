@@ -1,6 +1,6 @@
 import hyperactiv from 'hyperactiv';
 import { createDb, createDbApi, ActionsKeys, Actions } from '../data';
-import { add_transaction, Blockchain, Block, Transaction, TransactionBase, mine } from '../ledger';
+import { add_transaction, Blockchain, Block, Transaction, TransactionBase, mine } from '../blockchain';
 import { hash_data } from '../utils';
 import { sign } from '../identity';
 
