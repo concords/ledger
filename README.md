@@ -61,20 +61,3 @@ return {
   createTodo
 }
 ```
-
-```javascript
-import ledger from '@concords/core/src/ledger';
-
-const { createRecord } = ledger({
-  ...auth,
-  plugins: [
-    plugin(),
-  ],
-});
-
-...
-
-createRecord('table_name', { title: 'data info' }) {
-
-},
-```
