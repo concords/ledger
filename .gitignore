@@ -4,5 +4,5 @@ dist
 dist-ssr
 *.local
 
-packages/playground
-packages/vue-kit
+packages/playground/*
+packages/vue-kit/*
