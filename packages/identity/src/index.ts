@@ -1,5 +1,3 @@
-import { encode } from './utils';
-
 export interface Identity {
   x: string,
   y: string,
@@ -99,7 +97,7 @@ export const sign = async (
   data: Object
 ) : Promise<string> => {
   
-  const dataBuffer = await encode(data);
+  const dataBuffer = new TextEncoder().encode(JSON.stringify(data));
   const signatureBuffer = await crypto.subtle.sign(
       {
           name: "ECDSA",

@@ -1,0 +1,10 @@
+{
+  "name": "@concords/identity",
+  "version": "1.0.0",
+  "description": "ECDSA key-pair  utilities",
+  "main": "dist/index.js",
+  "repository": "https://github.com/concords/core/packages/identity",
+  "author": "dev@concords.app",
+  "license": "GPL-3.0-or-later",
+  "private": true
+}

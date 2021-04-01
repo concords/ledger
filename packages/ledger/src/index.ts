@@ -1,6 +1,5 @@
-import { add_transaction, create, TransactionBase } from './blockchain';
-import { exportIdentity, sign, importSigningKey } from './identity';
-import { hash_data } from './utils';
+import { add_transaction, create, TransactionBase, hash_data } from '@concords/core';
+import { exportIdentity, sign, importSigningKey } from '@concords/identity';
 
 let hooks = {};
 

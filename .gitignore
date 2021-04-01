@@ -6,3 +6,6 @@ dist-ssr
 
 packages/playground/*
 packages/vue-kit/*
+
+packages/*/src/*.d.ts
+packages/*/src/*.js

@@ -1,0 +1,13 @@
+{
+  "name": "@concords/plugins",
+  "version": "1.0.0",
+  "description": "Plugin modules for @concords/ledger",
+  "main": "src/index.js",
+  "repository": "https://github.com/concords/core/packages/plugins",
+  "author": "dev@concords.app",
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "dependencies": {
+    "idb": "^6.0.0"
+  }
+}
