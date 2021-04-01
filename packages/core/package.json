@@ -1,7 +1,17 @@
 {
   "name": "@concords/core",
-  "version": "0.4.10",
+  "version": "1.0.5",
   "description": "An immutable Javascript data ledger",
   "repository": "git://github.com/concords/core/packages/core",
-  "main": "src/index.js"
+  "main": "dist/build/concords-core.cjs.js",
+  "module": "dist/build/concords-core.esm.js",
+  "types": "types",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
+    "pre-publish": "yarn build",
+    "publish": "yarn npm publish --access public"
+  }
 }

@@ -1,10 +1,19 @@
 {
   "name": "@concords/identity",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "ECDSA key-pair  utilities",
-  "main": "dist/index.js",
   "repository": "https://github.com/concords/core/packages/identity",
   "author": "dev@concords.app",
   "license": "GPL-3.0-or-later",
-  "private": true
+  "main": "dist/build/concords-identity.cjs.js",
+  "module": "dist/build/concords-identity.esm.js",
+  "types": "types",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
+    "pre-publish": "yarn build",
+    "publish": "yarn npm publish --access public"
+  }
 }

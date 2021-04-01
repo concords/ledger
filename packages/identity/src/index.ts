@@ -14,10 +14,10 @@ export interface AuthKeys {
  * const {
  *   identity: Identity,
  *   secret: string,
- * } = await create();
+ * } = await createIdentity();
  * ```
  */
-export const create = async (): Promise<AuthKeys> => {
+export const createIdentity = async (): Promise<AuthKeys> => {
   const { publicKey, privateKey} = await crypto.subtle.generateKey(
     { name: "ECDSA", namedCurve: "P-384" },
     true,

@@ -1,11 +1,15 @@
 node_modules
 .DS_Store
-dist
-dist-ssr
+
 *.local
 
-packages/playground/*
-packages/vue-kit/*
+.yarn/*
+# !.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
-packages/*/src/*.d.ts
-packages/*/src/*.js
+packages/*/types
+packages/*/dist

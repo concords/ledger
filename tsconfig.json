@@ -4,7 +4,7 @@
       "@concords/*": ["./packages/*/src"]
     },
     "target": "es2016",
-    "module": "es2015",
+    "module": "CommonJS",
     "lib": [
       "esnext.asynciterable",
       "es2016",

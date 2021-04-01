@@ -1,4 +1,4 @@
-import { add_transaction, create, TransactionBase, hash_data } from '@concords/core';
+import { add_transaction, create, hash_data } from '@concords/core';
 import { exportIdentity, sign, importSigningKey } from '@concords/identity';
 
 let hooks = {};
@@ -22,13 +22,12 @@ async function runHooks(type, props) {
 
 export default (config = {
   plugins: [],
-  ledger: null,
   identity: null,
   secret: null
 }) => {
 
   const state = {
-    ledger: config.ledger,
+    ledger: null,
     signingKey: null,
   };
 
@@ -36,10 +35,9 @@ export default (config = {
     state.signingKey = await importSigningKey(config.identity, config.secret);
   }
 
-  async function loadLedger() {
+  async function loadLedger(ledger) {
     await setSigningKey();
-    state.ledger = await create({ signingKey: state.signingKey }, 2);
-
+    state.ledger = ledger;
     runHooks('loaded', state);
   }
   
@@ -63,9 +61,9 @@ export default (config = {
   });
 
   const addTransaction = async (
-    type: string,
-    action: string,
-    transaction: Object,
+    type,
+    action,
+    transaction,
   ) => {
     if (!state.signingKey) {
       console.warn('cannot add transaction: signing key not loaded');
@@ -87,7 +85,7 @@ export default (config = {
     const timestamp = Date.now();
     const id = await hash_data(`${JSON.stringify(identity)}_${timestamp}`);
 
-    const data: TransactionBase = {
+    const data = {
         ...transaction,
         id,
         timestamp,
@@ -120,14 +118,10 @@ export default (config = {
   const deleteRecord = async (type, data) => {
     await addTransaction(type, 'delete', data);
   }
-
-  if (state.ledger) {
-    loadLedger();
-  } else {
-    createLedger();
-  }
   
   return {
+    createLedger,
+    loadLedger,
     createRecord,
     updateRecord,
     deleteRecord,

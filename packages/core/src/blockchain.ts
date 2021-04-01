@@ -179,7 +179,7 @@ export async function create(genesis_data: Object, difficulty: number): Promise<
     return blockchain;
 };
 
-function consensus(blockchains: Array<Blockchain>): Blockchain {
+export function consensus(blockchains: Array<Blockchain>): Blockchain {
     let longestChain: Blockchain = blockchains[0];
 
     blockchains.forEach((blockchain) => {
