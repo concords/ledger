@@ -13,16 +13,10 @@
     "identity:dev": "yarn --cwd packages/identity dev",
     "identity:build": "yarn --cwd packages/identity build",
     "use:dev": "yarn --cwd packages/use dev",
-    "use:build": "yarn --cwd packages/use build",
-    "build:core": "vite build --target lib --name my-components"
-  },
-  "dependencies": {
-    "@fontsource/rajdhani": "^4.1.0",
-    "vue": "^3.0.5"
+    "use:build": "yarn --cwd packages/use build"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.0.4",
-    "@vue/compiler-sfc": "^3.0.5",
     "autoprefixer": "^10.2.1",
     "eslint": "^7.17.0",
     "eslint-plugin-vue": "^7.4.1",

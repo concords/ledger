@@ -16,6 +16,8 @@
 <script>
 import { reactive, toRefs } from 'vue';
 import ledger from '@concords/core/src/ledger';
+import idbPlugin from '@concords/core/src/plugins/idb'
+import lsPlugin from '@concords/core/src/plugins/ls'
 
 const useTodoPlugin = () => {
   const store = reactive({
@@ -26,7 +28,7 @@ const useTodoPlugin = () => {
   return {
     store,
     plugin: {
-      loaded(ledger) {
+      loaded() {
         store.loaded = true;
       },
       createRecord({ type, data }) {
@@ -53,7 +55,10 @@ export default {
     const { createRecord } = ledger({
       identity: props.identity,
       secret: props.secret,
-      plugins: [todo.plugin],
+      plugins: [
+        lsPlugin,
+        idbPlugin(['todos']),
+        todo.plugin],
     });
 
     function createTodo() {

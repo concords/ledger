@@ -2,6 +2,8 @@ import { add_transaction, create, TransactionBase } from './blockchain';
 import { exportIdentity, sign, importSigningKey } from './identity';
 import { hash_data } from './utils';
 
+let hooks = {};
+
 const availableHooks = [
   'loaded',
   'updated',
@@ -10,6 +12,14 @@ const availableHooks = [
   'updateRecord',
   'deleteRecord',
 ];
+
+async function runHooks(type, props) {
+  let i = 0;
+  let len = hooks[type].length;
+  for (;i < len; i++) {
+    await hooks[type][i](props)
+  }
+};
 
 export default (config = {
   plugins: [],
@@ -30,19 +40,20 @@ export default (config = {
   async function loadLedger() {
     await setSigningKey();
     state.ledger = await create({ signingKey: state.signingKey }, 2);
-    hooks['loaded'].forEach(({ action }) => action(state.ledger));
+
+    runHooks('loaded', state);
   }
   
   async function createLedger() {
     await setSigningKey();
     state.ledger = await create({ signingKey: state.signingKey }, 2);
-    hooks['loaded'].forEach((action) => action(state.ledger));
+    runHooks('loaded', state);
   }
 
-  const hooks = availableHooks.reduce((acc, curr) => ({
+  hooks = availableHooks.reduce((acc, curr) => ({
     ...acc,
     [curr]: [],
-  }), {})
+  }), {});
 
   config.plugins.forEach((plugin) => {
     availableHooks.forEach((hook) => {
@@ -97,8 +108,8 @@ export default (config = {
       ...signedTransaction
     }, { ...state.ledger });
 
-    hooks[`${action}Record`].forEach((action) => action(signedTransaction));
-    hooks['updated'].forEach((action) => action(state.ledger));
+    runHooks(`${action}Record`, signedTransaction);
+    runHooks('updated', state);
   }
 
   const createRecord = async (type, data) => {
@@ -106,6 +117,9 @@ export default (config = {
   }
   const updateRecord = async (type, data) => {
     await addTransaction(type, 'update', data);
+  }
+  const deleteRecord = async (type, data) => {
+    await addTransaction(type, 'delete', data);
   }
 
   if (state.ledger) {
@@ -117,5 +131,6 @@ export default (config = {
   return {
     createRecord,
     updateRecord,
+    deleteRecord,
   }
 }
