@@ -1,6 +1,6 @@
 {
   "name": "@concords/ledger",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "JS data-ledger",
   "repository": "https://github.com/concords/core/packages/ledger",
   "author": "dev@concords.app",

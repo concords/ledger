@@ -87,14 +87,18 @@ export default (config = {
 
     const data = {
         ...transaction,
-        id,
-        timestamp,
     };
+
+    if (!data.id) {
+      data.id = await hash_data(`${JSON.stringify(data)}_${timestamp}`);
+    }
     
     const signedTransaction = {
       type,
       action,
       data,
+      id,
+      timestamp,
       user: identity,
     }
 
