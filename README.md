@@ -1,13 +1,26 @@
-# Concords
+# @concords/ledger
 
+An immuntable Javascript data ledger.
 
-## concords/core
+## @concords/identity
 
-### Event Hooks
+The ledger requires an Identity to perform transactions, this is de-coupled from the @concords/ledger and must be handled.
 
-The concords runtime uses an event based plugin system.
+## Getting Started
+
+```bash
+$ npm install @concords/ledger @concords/identity --save
+```
 
 ```javascript
+import Ledger from '@concords/ledger';
+```
+
+## Event Hooks
+
+The concords runtime uses an event based plugin system.
+```javascript
+
 const plugin = () => {
   return {
     created(ledger) {},
