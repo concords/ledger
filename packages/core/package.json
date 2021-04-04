@@ -1,13 +1,14 @@
 {
   "name": "@concords/core",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "An immutable Javascript data ledger",
   "repository": "git://github.com/concords/core/packages/core",
   "main": "dist/concords-core.cjs.js",
   "module": "dist/concords-core.esm.js",
   "types": "types",
   "files": [
-    "/dist"
+    "/dist",
+    "/types"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",

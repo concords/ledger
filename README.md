@@ -1,10 +1,17 @@
-# @concords/ledger
+# An immutable Javascript data-ledger.
 
-An immuntable Javascript data ledger.
+> ## concord
+> /ˈkɒŋkɔːd/
+>
+> agreement or harmony between people or groups.
+
+## @concords/ledger
+
+A blockchain based data-ledger interface for immutable runtime data.
 
 ## @concords/identity
 
-The ledger requires an Identity to perform transactions, this is de-coupled from the @concords/ledger and must be handled.
+The ledger requires an Identity to perform transactions, authentication is handled outside of the ledger.
 
 ## Getting Started
 
@@ -14,63 +21,49 @@ $ npm install @concords/ledger @concords/identity --save
 
 ```javascript
 import Ledger from '@concords/ledger';
-```
 
-## Event Hooks
+export default async function() {
+  let todos = [];
 
-The concords runtime uses an event based plugin system.
-```javascript
-
-const plugin = () => {
-  return {
-    created(ledger) {},
-    loaded(ledger) {},
-    updated(ledger) {},
-    unloaded(ledger) {},
-    updateRecord({ type, data }) {},
-    createRecord({ type, data }) {},
-    deleteRecord({ type, data }) {},
-  }
-}
-```
-
-These hooks can be used to update state, send API requests, update IndexedDB.
-
-```javascript
-const useTodoPlugin = () => {
-  const store = reactive({
-    loaded: false,
-    todos: [],
+  const {
+    record,
+    load,
+    auth,
+  } = Ledger({
+    plugins: [
+      {
+        async onRecord(record) {
+          const index = todos.findIndex(({ id }) => id === record.data.id);
+          
+          if (index > -1) {
+            todos.splice(index, 1, record.data);
+          } else {
+            todos = [...todos, record.data];
+          }
+        }
+      }
+    ]
   });
-  
 
-  return {
-    store,
-    plugin: {
-      loaded(ledger) {
-        store.loaded = true;
-      },
-      createRecord({ type, data }) {
-        store.todos = [...store.todos, data];
-      },
-    }
-  };
-}
+  const user = await createIdentity();
+  await auth(user);
 
-const todo = useTodoPlugin();
+  load();
 
-const { createRecord } = ledger({
-  identity: props.identity,
-  secret: props.secret,
-  plugins: [todo.plugin],
-});
+  function addItem() {
+    record({
+        title: `Task ${todos.length + 1}`,
+        completed: false,
+      }
+    );
+  }
 
-function createTodo() {
-  createRecord('todos', { title: 'Hi There' })
-}
-
-return {
-  ...toRefs(todo.store),
-  createTodo
-}
+  function completeItem(todo) {
+    record({
+        ...todo,
+        completed: !todo.completed
+      }
+    );
+  }
+};
 ```

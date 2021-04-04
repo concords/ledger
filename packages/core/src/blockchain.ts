@@ -6,9 +6,9 @@ export interface TransactionBase {
 }
 
 export interface Transaction {
-    action: string,
-    type: string,
-    data: TransactionBase,
+    id: string,
+    timestamp: number;
+    data: Object,
     signature: Object,
     user: Object,
 };

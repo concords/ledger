@@ -4,12 +4,11 @@ import { exportIdentity, sign, importSigningKey } from '@concords/identity';
 let hooks = {};
 
 const availableHooks = [
-  'auth',
-  'loaded',
-  'updated',
-  'unloaded',
-  'addRecord',
-  'updateRecord',
+  'onAuth',
+  'onLoad',
+  'onUpdate',
+  'onUnload',
+  'onRecord'
 ];
 
 async function runHooks(type, props) {
@@ -32,19 +31,6 @@ export default (config = {
     signingKey: null,
   };
 
-  async function auth({ identity, secret }) {
-    state.signingKey = await importSigningKey(identity, secret);
-    runHooks('auth', identity);
-  }
-
-  async function load(ledger, shouldReplay = true) {
-    state.ledger = ledger || await create({}, 2);
-    runHooks('loaded', state);
-    if (shouldReplay) {
-      replay();
-    }
-  }
-
   hooks = availableHooks.reduce((acc, curr) => ({
     ...acc,
     [curr]: [],
@@ -58,11 +44,20 @@ export default (config = {
     });
   });
 
-  const addTransaction = async (
-    type,
-    action,
-    transaction,
-  ) => {
+  async function auth({ identity, secret }) {
+    state.signingKey = await importSigningKey(identity, secret);
+    runHooks('onAuth', identity);
+  }
+
+  async function load(ledger, shouldReplay = true) {
+    state.ledger = ledger || await create({}, 2);
+    runHooks('onLoad', state);
+    if (shouldReplay) {
+      replay();
+    }
+  }
+
+  const record = async (transaction) => {
     if (!state.signingKey) {
       console.warn('Cannot add transaction: signingKey not verified');
       return;
@@ -87,8 +82,6 @@ export default (config = {
     }
     
     const signedTransaction = {
-      type,
-      action,
       data,
       id,
       timestamp,
@@ -102,8 +95,8 @@ export default (config = {
       ...signedTransaction
     }, { ...state.ledger });
 
-    runHooks(`${action}Record`, signedTransaction);
-    runHooks('updated', state);
+    runHooks('onRecord', signedTransaction);
+    runHooks('onUpdate', state);
   }
 
   async function replay() {
@@ -118,22 +111,14 @@ export default (config = {
     ];
 
     for (let i = 0; i < transactions.length; i++) {
-      await runHooks(`${transactions[i].action}Record`, transactions[i])
+      await runHooks('onRecord', transactions[i])
     }
-  }
-
-  async function addRecord (type, data) {
-    await addTransaction(type, 'add', data);
-  }
-  async function updateRecord (type, data) {
-    await addTransaction(type, 'update', data);
   }
   
   return {
     auth,
     load,
     replay,
-    addRecord,
-    updateRecord
+    record,
   }
 }
