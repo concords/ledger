@@ -4,12 +4,12 @@ import { exportIdentity, sign, importSigningKey } from '@concords/identity';
 let hooks = {};
 
 const availableHooks = [
+  'auth',
   'loaded',
   'updated',
   'unloaded',
-  'createRecord',
+  'addRecord',
   'updateRecord',
-  'deleteRecord',
 ];
 
 async function runHooks(type, props) {
@@ -23,7 +23,8 @@ async function runHooks(type, props) {
 export default (config = {
   plugins: [],
   identity: null,
-  secret: null
+  secret: null,
+  ledger: null,
 }) => {
 
   const state = {
@@ -31,20 +32,17 @@ export default (config = {
     signingKey: null,
   };
 
-  async function setSigningKey() {
-    state.signingKey = await importSigningKey(config.identity, config.secret);
+  async function auth({ identity, secret }) {
+    state.signingKey = await importSigningKey(identity, secret);
+    runHooks('auth', identity);
   }
 
-  async function loadLedger(ledger) {
-    await setSigningKey();
-    state.ledger = ledger;
+  async function load(ledger, shouldReplay = true) {
+    state.ledger = ledger || await create({}, 2);
     runHooks('loaded', state);
-  }
-  
-  async function createLedger() {
-    await setSigningKey();
-    state.ledger = await create({ signingKey: state.signingKey }, 2);
-    runHooks('loaded', state);
+    if (shouldReplay) {
+      replay();
+    }
   }
 
   hooks = availableHooks.reduce((acc, curr) => ({
@@ -66,17 +64,12 @@ export default (config = {
     transaction,
   ) => {
     if (!state.signingKey) {
-      console.warn('cannot add transaction: signing key not loaded');
+      console.warn('Cannot add transaction: signingKey not verified');
       return;
     }
     
     if (!state.ledger) {
-      console.warn('cannot add transaction: ledger not loaded');
-      return;
-    }
-
-    if (!['create', 'update', 'delete'].includes(action)) {
-      console.warn('cannot add transaction: action must be "create", "update" or "delete');
+      console.warn('Cannot add transaction: ledger not loaded');
       return;
     }
 
@@ -113,21 +106,34 @@ export default (config = {
     runHooks('updated', state);
   }
 
-  const createRecord = async (type, data) => {
-    await addTransaction(type, 'create', data);
+  async function replay() {
+    if (!state.ledger) {
+      return;
+    }
+
+    const { chain, pending_transactions } = state.ledger;
+    const transactions = [
+        ...chain.reduce((acc, block) => ([ ...acc, ...block.transactions ]), []),
+        ...pending_transactions,
+    ];
+
+    for (let i = 0; i < transactions.length; i++) {
+      await runHooks(`${transactions[i].action}Record`, transactions[i])
+    }
   }
-  const updateRecord = async (type, data) => {
+
+  async function addRecord (type, data) {
+    await addTransaction(type, 'add', data);
+  }
+  async function updateRecord (type, data) {
     await addTransaction(type, 'update', data);
-  }
-  const deleteRecord = async (type, data) => {
-    await addTransaction(type, 'delete', data);
   }
   
   return {
-    createLedger,
-    loadLedger,
-    createRecord,
-    updateRecord,
-    deleteRecord,
+    auth,
+    load,
+    replay,
+    addRecord,
+    updateRecord
   }
 }

@@ -156,14 +156,8 @@ async function create_genesis_block(data): Promise<Block> {
     const timestamp = Date.now();
     const id = await hash_data(`${JSON.stringify(data.creator_key)}_${timestamp}`);
 
-    const genesis_block = create_block([{
-        action: 'create',
-        type: 'document',
-        data: { timestamp, id },
-        signature: data.signature,
-        user: data.creator_key,
-    }]);
-    const hash = await hash_data(genesis_block);
+    const genesis_block = create_block();
+    const hash = await hash_data({ timestamp, id});
 
     return {
         ...genesis_block,

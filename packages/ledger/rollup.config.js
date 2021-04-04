@@ -1,6 +1,7 @@
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript';
+import {terser} from 'rollup-plugin-terser';
 import pkg from './package.json'
 
 export default [
@@ -15,12 +16,13 @@ export default [
       babel({
         runtimeHelpers: true,
         extensions: ['.js', '.ts']
-      })
+      }),
     ],
     output: [
-      { file: pkg.main, format: 'cjs' },
+      { file: pkg.main, format: 'cjs', exports: 'default' },
       { file: pkg.module, format: 'es' },
-      { file: 'dist/build/concords-ledger.js', format: 'iife', name: 'Ledger' }
+      { file: 'dist/concords-ledger.js', format: 'iife', name: 'Ledger', exports: 'default' },
+      { file: 'dist/concords-ledger.min.js', format: 'iife', name: 'Ledger', exports: 'default', plugins: [terser()] }
     ]
   }
 ]

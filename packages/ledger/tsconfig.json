@@ -2,6 +2,6 @@
   "extends": "../../tsconfig.json",
   "extendsExact": true,
   "compilerOptions": {
-    "outDir": "./types"
+    "outDir": "./types",
   }
 } 
