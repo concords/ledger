@@ -1,7 +1,5 @@
-import { add_transaction, create, hash_data, mine } from '@concords/core';
+import { add_transaction, create as createChain, hash_data, mine } from '@concords/core';
 import { exportIdentity, sign, importSigningKey } from '@concords/identity';
-
-let hooks = {};
 
 const availableHooks = [
   'onAuth',
@@ -14,20 +12,22 @@ const availableHooks = [
   'onAdd'
 ];
 
-async function runHooks(type, props) {
-  let i = 0;
-  let len = hooks[type].length;
-  for (;i < len; i++) {
-    await hooks[type][i](JSON.parse(JSON.stringify(props)))
-  }
-};
-
 export default (config = {
   plugins: [],
   identity: null,
   secret: null,
   ledger: null,
 }) => {
+
+  let hooks = {};
+
+  async function runHooks(type, props) {
+    let i = 0;
+    let len = hooks[type].length;
+    for (;i < len; i++) {
+      await hooks[type][i](JSON.parse(JSON.stringify(props)))
+    }
+  };
 
   const state = {
     ledger: null,
@@ -49,17 +49,17 @@ export default (config = {
 
   async function auth({ identity, secret }) {
     state.signingKey = await importSigningKey(identity, secret);
-    runHooks('onAuth', identity);
+    await runHooks('onAuth', identity);
   }
 
-  async function create(ledger, difficulty = 1) {
-    state.ledger = await create({}, difficulty);
-    runHooks('onCreate', state);
+  async function create(difficulty = 1) {
+    state.ledger = await createChain({}, difficulty);
+    await runHooks('onCreate', state);
   }
   
   async function load(ledger, shouldReplay = true) {
     state.ledger = ledger;
-    runHooks('onLoad', state);
+    await runHooks('onLoad', state);
     if (shouldReplay) {
       replay();
     }
@@ -142,10 +142,21 @@ export default (config = {
     runHooks('onCommit', state);
     runHooks('onUpdate', state);
   }
+
+  if (config.secret && config.identity) {
+    auth(config);
+  }
+
+  if (config.ledger) {
+    load(config.ledger);
+  } else {
+    create();
+  }
   
   return {
     auth,
     load,
+    create,
     replay,
     commit,
     add,

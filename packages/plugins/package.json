@@ -5,17 +5,19 @@
   "repository": "https://github.com/concords/core/packages/plugins",
   "author": "dev@concords.app",
   "license": "GPL-3.0-or-later",
-  "main": "dist/build/concords-ledger.cjs.js",
-  "module": "dist/build/concords-ledger.esm.js",
+  "main": "dist/build/concords-plugins.cjs.js",
+  "module": "dist/build/concords-plugins.esm.js",
   "types": "types",
   "files": [
     "/dist"
   ],
   "dependencies": {
-    "idb": "^6.0.0"
+    "idb": "^6.0.0",
+    "lokijs": "^1.5.11"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
+    "dev": "tsc -p tsconfig.json -w && rollup -c -w",
     "pre-publish": "yarn build",
     "publish": "yarn npm publish --access public"
   }

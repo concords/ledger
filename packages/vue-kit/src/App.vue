@@ -1,29 +1,14 @@
 <template>
   <div>
-    <div>
-      <button @click="addItem">
-        Add Todo
-      </button>
-      <ul>
-        <li
-          v-for="todo in todos"
-          :key="todo.id"
-        >
-          <button @click="completeItem(todo)">
-            Complete Me
-          </button>
-          <span>{{ todo.title }}</span>{{ todo.completed }}
-        </li>
-      </ul>
-      <button @click="commit">
-        Save
-      </button>
-    </div>
+    <loki
+      :user="user"
+      :ledger="ledger"
+    />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
-import Ledger from '@concords/ledger';
+import { defineComponent, ref } from 'vue'
+import Loki from './components/Loki.vue';
 
 const user = {
   "secret": "JRxW6TjcK76B1KLKi7uo5syiKAFkgPWmSb6cmnv95i2cV5mClSv1dYCDD8uuYs3S",
@@ -34,61 +19,11 @@ const user = {
 }
 
 export default defineComponent({
+  components: { Loki },
   setup() {
-    const todos = ref([]);
+    const ledger = ref(JSON.parse(localStorage.getItem('ledger')));
 
-    const {
-      add,
-      load,
-      auth,
-      commit,
-      replay
-    } = Ledger({
-      plugins: [
-        {
-          onLoad({ ledger }) {
-            localStorage.setItem('ledger', JSON.stringify(ledger))
-          },
-          onUpdate({ ledger }) {
-            localStorage.setItem('ledger', JSON.stringify(ledger))
-          },
-          onAdd(record) {
-            const index = todos.value.findIndex(
-              ({ id }) => id === record.data.id
-            );
-
-            if (index > -1) {
-              todos.value.splice(index, 1, record.data);
-            } else {
-              todos.value.push(record.data);
-            }
-          }
-        }
-      ]
-    });
-
-    onMounted(async() => {
-      await auth(user);
-      await load(JSON.parse(localStorage.getItem('ledger')));
-    });
-
-    function addItem() {
-      add({
-          title: `Task ${todos.value.length + 1}`,
-          completed: false,
-        }
-      );
-    }
-
-    function completeItem(todo) {
-      add({
-          ...todo,
-          completed: !todo.completed
-        }
-      );
-    }
-
-    return { addItem, completeItem, todos, commit }
+    return { ledger, user }
   },
 })
 </script>

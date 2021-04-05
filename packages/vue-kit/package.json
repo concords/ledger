@@ -7,6 +7,8 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@concords/ledger": "workspace:packages/ledger",
+    "lokijs": "^1.5.11",
     "vue": "^3.0.5"
   },
   "devDependencies": {

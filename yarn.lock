@@ -463,6 +463,7 @@ __metadata:
   resolution: "@concords/plugins@workspace:packages/plugins"
   dependencies:
     idb: ^6.0.0
+    lokijs: ^1.5.11
   languageName: unknown
   linkType: soft
 
@@ -470,8 +471,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@concords/vue-kit@workspace:packages/vue-kit"
   dependencies:
+    "@concords/ledger": "workspace:packages/ledger"
     "@vitejs/plugin-vue": ^1.0.4
     "@vue/compiler-sfc": ^3.0.5
+    lokijs: ^1.5.11
     vite: ^2.0.0-beta.12
     vue: ^3.0.5
   languageName: unknown
@@ -3183,6 +3186,13 @@ fsevents@~2.3.1:
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 4983720b9abca930a4a46f18db163d7dad8dd00dbed6db0cc7b499b33b717cce69f80928b27bbb1ff2cbd3b19d251ee90669a8b5ea466072ca81c2ebe91e7468
+  languageName: node
+  linkType: hard
+
+"lokijs@npm:^1.5.11":
+  version: 1.5.11
+  resolution: "lokijs@npm:1.5.11"
+  checksum: f95ad7ff217f1ee6ca1807f03c72a88164c1b2c4de60175aadd1203a26668282f737c148732a0d43833a290ec47dec0c0bb89df210ab3feac3f02d7274f70bb9
   languageName: node
   linkType: hard
 
