@@ -6,8 +6,10 @@ let hooks = {};
 const availableHooks = [
   'onAuth',
   'onLoad',
+  'onCreate',
   'onUpdate',
   'onUnload',
+  'onReplay',
   'onCommit',
   'onAdd'
 ];
@@ -50,8 +52,13 @@ export default (config = {
     runHooks('onAuth', identity);
   }
 
-  async function load(ledger, difficulty = 1, shouldReplay = true) {
-    state.ledger = ledger || await create({}, difficulty);
+  async function create(ledger, difficulty = 1) {
+    state.ledger = await create({}, difficulty);
+    runHooks('onCreate', state);
+  }
+  
+  async function load(ledger, shouldReplay = true) {
+    state.ledger = ledger;
     runHooks('onLoad', state);
     if (shouldReplay) {
       replay();
@@ -100,8 +107,9 @@ export default (config = {
     runHooks('onUpdate', state);
   }
 
-  async function replay() {
+  async function replay({ from = null, to = null } = {}) {
     if (!state.ledger) {
+      console.warn('Cannot replay: ledger not loaded');
       return;
     }
 
@@ -109,11 +117,24 @@ export default (config = {
     const transactions = [
         ...chain.reduce((acc, block) => ([ ...acc, ...block.transactions ]), []),
         ...pending_transactions,
-    ];
+    ].sort((a, b) => a.timestamp - b.timestamp);
 
-    for (let i = 0; i < transactions.length; i++) {
+    let i = from ? 
+      transactions.findIndex(({ id }) => id === from) :
+      0;
+
+    const len = to ? 
+      transactions.findIndex(({ id }) => id === to) + 1 :
+      transactions.length;  
+
+    if (i < 0) {
+      console.warn(`Cannot replay: transaction ${from} not found`);
+      return;
+    }
+    for (; i < len; i++) {
       await runHooks('onAdd', transactions[i]);
     }
+    runHooks('onReplay', { from, to });
   }
 
   async function commit() {

@@ -41,7 +41,8 @@ export default defineComponent({
       add,
       load,
       auth,
-      commit
+      commit,
+      replay
     } = Ledger({
       plugins: [
         {
@@ -50,9 +51,6 @@ export default defineComponent({
           },
           onUpdate({ ledger }) {
             localStorage.setItem('ledger', JSON.stringify(ledger))
-          },
-          onCommit({ ledger }) {
-            console.log('commit', ledger.chain.pop());
           },
           onAdd(record) {
             const index = todos.value.findIndex(
@@ -71,7 +69,7 @@ export default defineComponent({
 
     onMounted(async() => {
       await auth(user);
-      await load(JSON.parse(localStorage.getItem('ledger')), 1);
+      await load(JSON.parse(localStorage.getItem('ledger')));
     });
 
     function addItem() {

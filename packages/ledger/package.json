@@ -1,6 +1,6 @@
 {
   "name": "@concords/ledger",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "An immutable Javascript data-ledger",
   "repository": "https://github.com/concords/core/packages/ledger",
   "author": "dev@concords.app",
@@ -16,6 +16,6 @@
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
     "dev": "rollup -c -w",
     "pre-publish": "yarn build",
-    "publish": "yarn npm publish --access public --tolerate-republish"
+    "publish": "yarn npm publish --access public"
   }
 }
