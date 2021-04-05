@@ -23,7 +23,6 @@ export interface Block {
     timestamp: number,
     previous_hash: string,
     hash: string,
-    nonce: number,
 }
 export interface Blockchain {
     chain: Array<Block>,
@@ -33,7 +32,7 @@ export interface Blockchain {
 }
 
 async function proof_of_work(block: Block, difficulty: number) {
-    const find_hash = async (block: Block): Promise<string> => {
+    const find_hash = async (block): Promise<string> => {
         let hash = await hash_data(block);
         if (hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
             const nonce = block.nonce + 1;
@@ -131,8 +130,7 @@ function create_block(
             transactions,
             timestamp: Date.now(),
             previous_hash,
-            hash: '0',
-            nonce: 0,
+            hash: '0'
         }
 };
 

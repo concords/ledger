@@ -1,4 +1,4 @@
-import { add_transaction, create, hash_data } from '@concords/core';
+import { add_transaction, create, hash_data, mine } from '@concords/core';
 import { exportIdentity, sign, importSigningKey } from '@concords/identity';
 
 let hooks = {};
@@ -8,14 +8,15 @@ const availableHooks = [
   'onLoad',
   'onUpdate',
   'onUnload',
-  'onRecord'
+  'onCommit',
+  'onAdd'
 ];
 
 async function runHooks(type, props) {
   let i = 0;
   let len = hooks[type].length;
   for (;i < len; i++) {
-    await hooks[type][i](props)
+    await hooks[type][i](JSON.parse(JSON.stringify(props)))
   }
 };
 
@@ -49,15 +50,15 @@ export default (config = {
     runHooks('onAuth', identity);
   }
 
-  async function load(ledger, shouldReplay = true) {
-    state.ledger = ledger || await create({}, 2);
+  async function load(ledger, difficulty = 1, shouldReplay = true) {
+    state.ledger = ledger || await create({}, difficulty);
     runHooks('onLoad', state);
     if (shouldReplay) {
       replay();
     }
   }
 
-  const record = async (transaction) => {
+  const add = async (transaction) => {
     if (!state.signingKey) {
       console.warn('Cannot add transaction: signingKey not verified');
       return;
@@ -95,7 +96,7 @@ export default (config = {
       ...signedTransaction
     }, { ...state.ledger });
 
-    runHooks('onRecord', signedTransaction);
+    runHooks('onAdd', signedTransaction);
     runHooks('onUpdate', state);
   }
 
@@ -111,14 +112,21 @@ export default (config = {
     ];
 
     for (let i = 0; i < transactions.length; i++) {
-      await runHooks('onRecord', transactions[i])
+      await runHooks('onAdd', transactions[i]);
     }
+  }
+
+  async function commit() {
+    state.ledger = await mine(state.ledger);
+    runHooks('onCommit', state);
+    runHooks('onUpdate', state);
   }
   
   return {
     auth,
     load,
     replay,
-    record,
+    commit,
+    add,
   }
 }
