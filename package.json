@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "build": "yarn workspaces foreach run build",
+    "versions": "yarn workspaces foreach run version",
     "dev:plugins": "yarn workspace @concords/plugins dev",
     "build:plugins": "yarn workspace @concords/plugins build",
     "build:vue-kit": "yarn workspace @concords/vue-kit build",

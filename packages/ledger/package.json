@@ -34,7 +34,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
     "dev": "rollup -c -w",
-    "pre-publish": "yarn build",
+    "version": "yarn version",
     "publish": "yarn npm publish --access public"
   }
 }
