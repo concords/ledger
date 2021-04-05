@@ -7,7 +7,12 @@
     "url": "https://github.com/concords/ledger"
   },
   "author": "dev@concords.app",
-  "keywords": ["javascript", "data-ledger", "blockchain", "decentralized"],
+  "keywords": [
+    "javascript",
+    "data-ledger",
+    "blockchain",
+    "decentralized"
+  ],
   "license": "GPL-3.0-or-later",
   "main": "dist/concords-ledger.cjs.js",
   "module": "dist/concords-ledger.esm.js",
@@ -22,6 +27,10 @@
     "/dist",
     "/types"
   ],
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
     "dev": "rollup -c -w",

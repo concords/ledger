@@ -1616,9 +1616,11 @@ __metadata:
     autoprefixer: ^10.2.1
     babel-plugin-external-helpers: ^6.22.0
     babel-preset-es2015: ^6.24.1
+    conventional-changelog-atom: ^2.0.8
     dotenv: ^8.2.0
     eslint: ^7.17.0
     eslint-plugin-vue: ^7.4.1
+    husky: ^6.0.0
     postcss: ^8.2.4
     resolve: ^1.20.0
     rollup: ^2.44.0
@@ -1654,6 +1656,15 @@ __metadata:
     compare-func: ^2.0.0
     q: ^1.5.1
   checksum: 984545414fecb06d61a1af3cf2eefaa8cc71adb309f7e517f4dca65945a55d1f25813a7644934f372e7ea8bef5336ed92e9325a65af739f23f843dd1a363fc63
+  languageName: node
+  linkType: hard
+
+"conventional-changelog-atom@npm:^2.0.8":
+  version: 2.0.8
+  resolution: "conventional-changelog-atom@npm:2.0.8"
+  dependencies:
+    q: ^1.5.1
+  checksum: ac0528755b2c2690502dc4757cbb57002d2a2b0880575df168235a0c3891187412d1e2074f41accc2c47b3ed8b19fe05398d23edba08cc0a692eee9220295179
   languageName: node
   linkType: hard
 
@@ -2551,6 +2562,15 @@ fsevents@~2.3.1:
     jsprim: ^1.2.2
     sshpk: ^1.7.0
   checksum: d28227eed37cb0dae0e76c46b2a5e611c678808433e5642238f17dba7f2c9c8f8d1646122d57ec1a110ecc7e8b9f5b7aa0462f1e2a5fa3b41f2fca5a69af7edf
+  languageName: node
+  linkType: hard
+
+"husky@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "husky@npm:6.0.0"
+  bin:
+    husky: lib/bin.js
+  checksum: 61e1f7f53f3c969d361c2a1d4ed8018b9447406ea6cd644a2526d18b76877d135001d8cbd48a1d201fc1614d96995e691ecd2b82a8d8513a6b4a313da1188ccd
   languageName: node
   linkType: hard
 
