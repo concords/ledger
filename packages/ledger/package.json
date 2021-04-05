@@ -1,12 +1,22 @@
 {
   "name": "@concords/ledger",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "An immutable Javascript data-ledger",
-  "repository": "https://github.com/concords/core/packages/ledger",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/concords/ledger"
+  },
   "author": "dev@concords.app",
+  "keywords": ["javascript", "data-ledger", "blockchain", "decentralized"],
   "license": "GPL-3.0-or-later",
   "main": "dist/concords-ledger.cjs.js",
   "module": "dist/concords-ledger.esm.js",
+  "exports": {
+    "require": "./dist/concords-ledger.cjs.js",
+    "import": "./dist/concords-ledger.esm.js",
+    "default": "./dist/concords-ledger.esm.js",
+    "browser": "./dist/concords-ledger.min.js"
+  },
   "types": "types",
   "files": [
     "/dist",
