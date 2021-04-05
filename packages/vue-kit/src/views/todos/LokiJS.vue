@@ -6,6 +6,12 @@
     <h2 class="text-xl text-center">
       @concords/ledger & LokiJS
     </h2>
+    <a
+      href="https://gist.github.com/samconcords/401723000c8ebf3687538193ac183da2"
+      class="block text-center text-xs underline text-blue-500 hover:text-blue-700"
+    >
+      https://gist.github.com/samconcords/401723000c8ebf3687538193ac183da2
+    </a>
     <div class="mx-auto w-3/4 m-4">
       <input
         v-model="itemInput"
