@@ -134,7 +134,7 @@ export default (config = {
     for (; i < len; i++) {
       await runHooks('onAdd', transactions[i]);
     }
-    runHooks('onReplay', { from, to });
+    runHooks('onReplay', { from, to, ...state });
   }
 
   async function commit() {

@@ -1,28 +1,48 @@
 <template>
   <div>
-    <h1>Vue Todo List</h1>
-    <h2>@concords/ledger & LokiJS</h2>
-    <div>
-      <input v-model="itemInput">
-      <button @click="addItem">
+    <h1 class="text-3xl text-center">
+      Vue Todo List
+    </h1>
+    <h2 class="text-xl text-center">
+      @concords/ledger & LokiJS
+    </h2>
+    <div class="mx-auto w-3/4 m-4">
+      <input
+        v-model="itemInput"
+        placeholder="New Todo Item..."
+        class="p-2 rounded border border-gray-400 w-full"
+      >
+      <button
+        class="block mx-auto my-4 py-2 px-4 text-primary-700 rounded border border-primary-500"
+        @click="addItem"
+      >
         Add Todo
       </button>
       <ul>
         <li
           v-for="todo in todos"
           :key="todo.id"
-        >
-          <input
-            v-model="todo.completed"
-            type="checkbox"
-            @click="completeItem(todo)"
-          >
-          <span>{{ todo.title }}</span>
+        > 
+          <label>
+            <input
+              v-model="todo.completed"
+              type="checkbox"
+              class="mr-4"
+              @click="completeItem(todo)"
+            >
+            <span>{{ todo.title }}</span>
+          </label>
         </li>
       </ul>
-      <button @click="commit">
-        Save
-      </button>
+      <div class="flex mt-6">
+        <button
+          class="py-2 px-4 text-indigo-700 rounded border border-indigo-500 disabled:opacity-50"
+          :disabled="!canCommit"
+          @click="commit"
+        >
+          Commit
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +91,7 @@ export default defineComponent({
   },
   setup(props) {
     const todos = ref([]);
+    const canCommit = ref(false);
 
     const {
       collection,
@@ -79,6 +100,11 @@ export default defineComponent({
 
     const itemInput = ref('');
 
+    function handleUpdate({ ledger }) {
+      canCommit.value = !!ledger.pending_transactions.length;
+      todos.value = collection.value.data;
+    }
+
     const { add, commit } = ledger({
       ...props.user,
       ledger: props.ledger,
@@ -86,12 +112,8 @@ export default defineComponent({
         localStoragePlugin,
         lokiPlugin,
         {
-          onUpdate() {
-            todos.value = collection.value.data;
-          },
-          onReplay() {
-            todos.value = collection.value.data;
-          }
+          onUpdate: handleUpdate,
+          onReplay: handleUpdate
         }
       ],
     });
@@ -113,7 +135,7 @@ export default defineComponent({
       );
     }
 
-    return { addItem, commit, itemInput, todos, completeItem }
+    return { addItem, commit, itemInput, todos, completeItem, canCommit }
   },
 })
 </script>
