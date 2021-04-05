@@ -8,7 +8,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import Loki from './components/Loki.vue';
+import Loki from './views/todos/LokiJS.vue';
 
 const user = {
   "secret": "JRxW6TjcK76B1KLKi7uo5syiKAFkgPWmSb6cmnv95i2cV5mClSv1dYCDD8uuYs3S",
