@@ -12,7 +12,7 @@
     >
       https://gist.github.com/samconcords/401723000c8ebf3687538193ac183da2
     </a>
-    <div class="mx-auto w-3/4 my-2">
+    <div class="mx-auto lg:w-1/2 md:w-3/4 my-2 px-2">
       <div class="flex justify-end">
         <input
           v-model="filters.searchTerm"
