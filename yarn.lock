@@ -510,6 +510,7 @@ __metadata:
     vite: ^2.0.0-beta.12
     vue: ^3.0.5
     vue-cli-plugin-tailwind: ~2.0.6
+    vue-router: 4
   languageName: unknown
   linkType: soft
 
@@ -6498,6 +6499,15 @@ typescript@^4.2.3:
   peerDependencies:
     eslint: ">=5.0.0"
   checksum: 27d6bc4acaafe897af8eee41512d0cd2812b533883d7ecbfda30c263533ebf486fdd76cb65f546f3c3737df383fb4bc33ecb358d7397b8b731c161c89db72bcd
+  languageName: node
+  linkType: hard
+
+"vue-router@npm:4":
+  version: 4.0.6
+  resolution: "vue-router@npm:4.0.6"
+  peerDependencies:
+    vue: ^3.0.0
+  checksum: 0f7ac0b5da2a0d37f1dadd58be69600f26d9a95c75ece82e50803e5532a25599e414100a15f942d4188eb789bf40fe132b4badc98337a3c431898e112f63f18c
   languageName: node
   linkType: hard
 

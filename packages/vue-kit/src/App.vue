@@ -1,6 +1,28 @@
 <template>
   <div>
-    <loki
+    <nav class="flex items-center justify-between h-16">
+      <ul class="flex">
+        <li class="ml-2">
+          <router-link
+            to="/"
+            class=""
+            active-class="font-bold"
+          >
+            Home
+          </router-link>
+        </li>
+        <li class="ml-2">
+          <router-link
+            to="/lokijs"
+            active-class="font-bold"
+          >
+            LokiJS
+          </router-link>
+        </li>
+      </ul>
+    </nav>
+
+    <router-view
       :user="user"
       :ledger="ledger"
     />
@@ -8,7 +30,6 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import Loki from './views/todos/LokiJS.vue';
 
 const user = {
   "secret": "JRxW6TjcK76B1KLKi7uo5syiKAFkgPWmSb6cmnv95i2cV5mClSv1dYCDD8uuYs3S",
@@ -19,7 +40,6 @@ const user = {
 }
 
 export default defineComponent({
-  components: { Loki },
   setup() {
     const ledger = ref(JSON.parse(localStorage.getItem('ledger')));
 

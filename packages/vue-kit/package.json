@@ -14,7 +14,8 @@
     "postcss": "^7",
     "tailwind": "^4.0.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "vue": "^3.0.5"
+    "vue": "^3.0.5",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.0.4",
