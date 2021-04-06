@@ -1,17 +1,11 @@
 <template>
   <div>
     <h1 class="text-3xl text-center">
-      Vue Todo List
+      Todo App
     </h1>
     <h2 class="text-xl text-center">
       @concords/ledger & LokiJS
     </h2>
-    <a
-      href="https://gist.github.com/samconcords/401723000c8ebf3687538193ac183da2"
-      class="block text-center text-xs underline text-blue-500 hover:text-blue-700"
-    >
-      https://gist.github.com/samconcords/401723000c8ebf3687538193ac183da2
-    </a>
     <div class="mx-auto lg:w-1/2 md:w-3/4 my-2 px-2">
       <div class="flex justify-end">
         <input
@@ -60,15 +54,17 @@
         <div class="flex justify-end">
           <button
             class="mr-2 py-2 px-4 text-indigo-700 rounded border border-indigo-500 disabled:opacity-50"
+            :class="!canCommit ? 'cursor-not-allowed text-gray-400' : ''"
             :disabled="!canCommit"
             @click="commit"
           >
             Commit
           </button>
           <a
-            :href="keyHref"
+            :href="!canCommit ? keyHref : ''"
             download="loki-todo-ledger.json"
-            class="py-2 px-4 text-white rounded border-0 bg-green-500 disabled:opacity-50"
+            class="py-2 px-4 text-white rounded border-0"
+            :class="canCommit ? 'pointer-events-none cursor-not-allowed bg-green-200' : 'bg-green-500 hover:bg-green-600'"
           >
             Download
           </a>

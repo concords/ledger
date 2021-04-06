@@ -1,8 +1,6 @@
 <template>
   <div>
-    <pre>
-      {{ ledger }}
-    </pre>
+    <pre>{{ ledger.chain }}</pre>
   </div>
 </template>
 <script>
