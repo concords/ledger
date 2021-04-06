@@ -19,7 +19,7 @@
           placeholder="Search Items"
           class="p-2 right rounded-full border border-gray-400 w-64 m-2 align-right"
         >
-        <label>
+        <label class="py-4 ml-2">
           <input
             v-model="filters.showCompleted"
             type="checkbox"
@@ -57,19 +57,28 @@
             Add Todo
           </button>
         </div>
-        <button
-          class="py-2 px-4 text-indigo-700 rounded border border-indigo-500 disabled:opacity-50"
-          :disabled="!canCommit"
-          @click="commit"
-        >
-          Commit
-        </button>
+        <div class="flex justify-end">
+          <button
+            class="mr-2 py-2 px-4 text-indigo-700 rounded border border-indigo-500 disabled:opacity-50"
+            :disabled="!canCommit"
+            @click="commit"
+          >
+            Commit
+          </button>
+          <a
+            :href="keyHref"
+            download="loki-todo-ledger.json"
+            class="py-2 px-4 text-white rounded border-0 bg-green-500 disabled:opacity-50"
+          >
+            Download
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { defineComponent, ref, watch, reactive } from 'vue';
+import { defineComponent, ref, watch, reactive, computed } from 'vue';
 import ledger from '@concords/ledger';
 import loki from 'lokijs';
 
@@ -84,7 +93,6 @@ const useLokiPlugin = (db) => {
     getCollection: () => collection,
     plugin: {
       onLoad: createCollection,
-      onCreate: createCollection,
       onAdd(record) {
         collection[
           record.data.$loki ? 'update' : 'insert'
@@ -114,6 +122,7 @@ export default defineComponent({
   setup(props) {
     const todos = ref([]);
     const canCommit = ref(false);
+    const file = ref(null);
 
     const {
       getCollection,
@@ -169,10 +178,13 @@ export default defineComponent({
       });
 
       if (ledger) {
-        canCommit.value = ledger.pending_transactions.length;
+       canCommit.value = ledger.pending_transactions.length;
+       file.value = new Blob([JSON.stringify(ledger, null, 2, 2)], { type: 'text/json' });
       }
     }
     watch(filters, handleUpdates);
+      
+    const keyHref = computed(() => !file.value || URL.createObjectURL(file.value));
 
     return {
       addItem,
@@ -182,7 +194,8 @@ export default defineComponent({
       todos,
       completeItem,
       canCommit,
-      filteredList
+      filteredList,
+      keyHref,
     }
   },
 })
