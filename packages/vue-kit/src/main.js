@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import App from './App.vue';
 import Home from './views/Home.vue';
 import LokiJS from './views/todos/LokiJS.vue';
+import ActivityLog from './views/ActivityLog.vue';
+import RawLedger from './views/RawLedger.vue';
 
 import './assets/tailwind.css';
 
@@ -16,6 +18,16 @@ const routes = [
     path: '/lokijs',
     name: 'lokijs',
     component: LokiJS,
+  },
+  {
+    path: '/activity-log',
+    name: 'activity-log',
+    component: ActivityLog,
+  },
+  {
+    path: '/raw-ledger',
+    name: 'raw-ledger',
+    component: RawLedger,
   },
 ];
 

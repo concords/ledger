@@ -5,8 +5,8 @@
         <li class="ml-2">
           <router-link
             to="/"
-            class=""
-            active-class="font-bold"
+            class="bg-gray-100 p-2 rounded"
+            active-class="font-bold bg-indigo-100"
           >
             Home
           </router-link>
@@ -14,9 +14,28 @@
         <li class="ml-2">
           <router-link
             to="/lokijs"
-            active-class="font-bold"
+            class="bg-gray-100 p-2 rounded"
+            active-class="font-bold bg-indigo-100"
           >
             LokiJS
+          </router-link>
+        </li>
+        <!-- <li class="ml-2">
+          <router-link
+            to="/activity-log"
+            class="bg-gray-100 p-2 rounded"
+            active-class="font-bold bg-indigo-100"
+          >
+            Activity Log
+          </router-link>
+        </li> -->
+        <li class="ml-2">
+          <router-link
+            to="/raw-ledger"
+            class="bg-gray-100 p-2 rounded"
+            active-class="font-bold bg-indigo-100"
+          >
+            Raw Ledger
           </router-link>
         </li>
       </ul>
