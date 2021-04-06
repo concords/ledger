@@ -1,1 +1,2 @@
-/types/**/*.js
+types
+!types/**/*.d.ts

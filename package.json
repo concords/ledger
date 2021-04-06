@@ -14,6 +14,7 @@
     "build:plugins": "yarn workspace @concords/plugins build",
     "build:vue-kit": "yarn workspace @concords/vue-kit build",
     "build:ledger": "yarn workspace @concords/ledger build",
+    "publish:ledger": "yarn workspace @concords/ledger publish",
     "pre-publish": "build",
     "publish": "yarn workspaces foreach run publish"
   },

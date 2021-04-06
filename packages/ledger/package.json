@@ -1,6 +1,6 @@
 {
   "name": "@concords/ledger",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "An immutable Javascript data-ledger",
   "repository": {
     "type": "git",
@@ -27,7 +27,6 @@
     "/dist",
     "/types"
   ],
-  "private": true,
   "publishConfig": {
     "access": "public"
   },
