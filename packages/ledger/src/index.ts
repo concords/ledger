@@ -4,7 +4,7 @@ import { exportIdentity, sign, importSigningKey } from '@concords/identity';
 const availableHooks = [
   'onAuth',
   'onLoad',
-  'onCreate',
+  'onReady',
   'onUpdate',
   'onUnload',
   'onReplay',
@@ -54,15 +54,17 @@ export default (config = {
 
   async function create(difficulty = 1) {
     state.ledger = await createChain({}, difficulty);
-    await runHooks('onCreate', state);
+    await runHooks('onLoad', state);
+    runHooks('onReady', state);
   }
   
   async function load(ledger, shouldReplay = true) {
     state.ledger = ledger;
     await runHooks('onLoad', state);
     if (shouldReplay) {
-      replay();
+      await replay();
     }
+    runHooks('onReady', state);
   }
 
   const add = async (transaction) => {

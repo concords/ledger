@@ -12,21 +12,24 @@
     >
       https://gist.github.com/samconcords/401723000c8ebf3687538193ac183da2
     </a>
-    <div class="mx-auto w-3/4 m-4">
-      <input
-        v-model="itemInput"
-        placeholder="New Todo Item..."
-        class="p-2 rounded border border-gray-400 w-full"
-      >
-      <button
-        class="block mx-auto my-4 py-2 px-4 text-primary-700 rounded border border-primary-500"
-        @click="addItem"
-      >
-        Add Todo
-      </button>
+    <div class="mx-auto w-3/4 my-2">
+      <div class="flex justify-end">
+        <input
+          v-model="filters.searchTerm"
+          placeholder="Search Items"
+          class="p-2 right rounded-full border border-gray-400 w-64 m-2 align-right"
+        >
+        <label>
+          <input
+            v-model="filters.showCompleted"
+            type="checkbox"
+          >
+          Show Completed
+        </label>
+      </div>
       <ul>
         <li
-          v-for="todo in todos"
+          v-for="todo in filteredList"
           :key="todo.id"
         > 
           <label>
@@ -40,7 +43,20 @@
           </label>
         </li>
       </ul>
-      <div class="flex mt-6">
+      <div class="flex-col mt-6 space-between">
+        <div class="flex mb-2">
+          <input
+            v-model="itemInput"
+            placeholder="New Todo Item..."
+            class="p-2 rounded border border-gray-400 flex-1 mr-2"
+          >
+          <button
+            class="block mx-auto py-2 px-4 text-primary-700 rounded border border-primary-500"
+            @click="addItem"
+          >
+            Add Todo
+          </button>
+        </div>
         <button
           class="py-2 px-4 text-indigo-700 rounded border border-indigo-500 disabled:opacity-50"
           :disabled="!canCommit"
@@ -53,24 +69,24 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch, reactive } from 'vue';
 import ledger from '@concords/ledger';
 import loki from 'lokijs';
 
 const useLokiPlugin = (db) => {
-  let collection = ref({});
+  let collection;
+
+  function createCollection({ ledger }) {
+    collection = db.addCollection(ledger.id, { disableMeta: true });
+  }
 
   return {
-    collection,
+    getCollection: () => collection,
     plugin: {
-      onLoad({ ledger }) {
-        collection.value = db.addCollection(ledger.id, { disableMeta: true });
-      },
-      onCreate({ ledger }) {
-        collection.value = db.addCollection(ledger.id, { disableMeta: true });
-      },
+      onLoad: createCollection,
+      onCreate: createCollection,
       onAdd(record) {
-        collection.value[
+        collection[
           record.data.$loki ? 'update' : 'insert'
         ](record.data);
       },
@@ -100,16 +116,16 @@ export default defineComponent({
     const canCommit = ref(false);
 
     const {
-      collection,
+      getCollection,
       plugin: lokiPlugin
     } = useLokiPlugin(new loki('ledger.db'));
 
     const itemInput = ref('');
-
-    function handleUpdate({ ledger }) {
-      canCommit.value = !!ledger.pending_transactions.length;
-      todos.value = collection.value.data;
-    }
+    
+    const filters = reactive({
+      searchTerm: '',
+      showCompleted: true,
+    });
 
     const { add, commit } = ledger({
       ...props.user,
@@ -118,30 +134,56 @@ export default defineComponent({
         localStoragePlugin,
         lokiPlugin,
         {
-          onUpdate: handleUpdate,
-          onReplay: handleUpdate
+          onReady: handleUpdates,
+          onUpdate: handleUpdates,
         }
       ],
     });
 
     function addItem() {
-      add({
-          title: itemInput.value,
-          completed: false,
-        }
-      );
+      add({ title: itemInput.value, completed: false });
       itemInput.value = '';
     }
 
     function completeItem(todo) {
-      add({
-          ...todo,
-          completed: !todo.completed
-        }
-      );
+      add({ ...todo, completed: !todo.completed });
     }
 
-    return { addItem, commit, itemInput, todos, completeItem, canCommit }
+    const filteredList = ref([]);
+
+    function handleUpdates({ ledger }) {
+      const collection = getCollection();
+
+      filteredList.value = collection.where((item) => {
+        // filter completed items
+        if (!filters.showCompleted && item.completed) {
+          return false
+        }
+
+        // filter by search term
+        if (filters.searchTerm) {
+          return new RegExp(filters.searchTerm.toLowerCase())
+            .test(item.title.toLowerCase());
+        }
+        return true;
+      });
+
+      if (ledger) {
+        canCommit.value = ledger.pending_transactions.length;
+      }
+    }
+    watch(filters, handleUpdates);
+
+    return {
+      addItem,
+      commit,
+      itemInput,
+      filters,
+      todos,
+      completeItem,
+      canCommit,
+      filteredList
+    }
   },
 })
 </script>
