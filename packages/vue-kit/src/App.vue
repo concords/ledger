@@ -42,8 +42,8 @@
     </nav>
 
     <router-view
+      v-model:ledger="ledger"
       :user="user"
-      :ledger="ledger"
     />
   </div>
 </template>

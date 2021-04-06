@@ -119,7 +119,10 @@ export default defineComponent({
       default: null,
     },
   },
-  setup(props) {
+  emits: [
+    'update:ledger',
+  ],
+  setup(props, { emit }) {
     const todos = ref([]);
     const canCommit = ref(false);
     const file = ref(null);
@@ -180,6 +183,7 @@ export default defineComponent({
       if (ledger) {
        canCommit.value = ledger.pending_transactions.length;
        file.value = new Blob([JSON.stringify(ledger, null, 2, 2)], { type: 'text/json' });
+       emit('update:ledger', ledger);
       }
     }
     watch(filters, handleUpdates);
