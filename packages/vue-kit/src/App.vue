@@ -48,7 +48,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 
 const user = {
   "secret": "JRxW6TjcK76B1KLKi7uo5syiKAFkgPWmSb6cmnv95i2cV5mClSv1dYCDD8uuYs3S",
@@ -61,6 +61,10 @@ const user = {
 export default defineComponent({
   setup() {
     const ledger = ref(JSON.parse(localStorage.getItem('ledger')));
+
+    watch(ledger, () => {
+      localStorage.setItem('ledger', JSON.stringify(ledger.value));
+    })
 
     return { ledger, user }
   },

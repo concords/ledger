@@ -503,6 +503,7 @@ __metadata:
     "@vitejs/plugin-vue": ^1.0.4
     "@vue/compiler-sfc": ^3.0.5
     autoprefixer: ^9
+    date-fns: ^2.19.0
     lokijs: ^1.5.11
     postcss: ^7
     tailwind: ^4.0.0
@@ -2284,6 +2285,13 @@ __metadata:
     eventemitter2: 5.0.1
     lodash: 4.17.5
   checksum: a581674416c10a000301a22c7fe05c7adbd78492ca920ac2374bd4e33e87d86505fb9aea8cd4cf779728c27873c93e689887509ae37ee46320fe392d199548d5
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "date-fns@npm:2.19.0"
+  checksum: 99ec34199c3a61cdb7fd27dcd68dd3c0c949ddfc34aa1daba9a6b2e0b5381bf42d8955d28ec2770f72eee429f5e7ab10fadba7b69108379d2545f003461d04f7
   languageName: node
   linkType: hard
 

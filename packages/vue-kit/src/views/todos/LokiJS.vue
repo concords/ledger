@@ -1,42 +1,16 @@
 <template>
-  <div>
-    <h1 class="text-3xl text-center">
-      Vue Todo App
-    </h1>
-    <h2 class="text-xl text-center">
-      LokiJS Plugin
-    </h2>
+  <div class="px-4">
+    <filters
+      v-model:searchTerm="searchFilter"
+      v-model:showCompleted="showCompletedFilter"
+    />
+
     <div class="mx-auto lg:w-1/2 md:w-3/4 my-2 px-2">
-      <div class="flex justify-end">
-        <input
-          v-model="filters.searchTerm"
-          placeholder="Search Items"
-          class="p-2 right rounded-full border border-gray-400 w-64 m-2 align-right"
-        >
-        <label class="py-4 ml-2">
-          <input
-            v-model="filters.showCompleted"
-            type="checkbox"
-          >
-          Show Completed
-        </label>
-      </div>
-      <ul>
-        <li
-          v-for="todo in filteredList"
-          :key="todo.id"
-        > 
-          <label>
-            <input
-              v-model="todo.completed"
-              type="checkbox"
-              class="mr-4"
-              @click="completeItem(todo)"
-            >
-            <span>{{ todo.title }}</span>
-          </label>
-        </li>
-      </ul>
+      <todo-list
+        :items="filteredList"
+        @update:item="completeItem"
+      />
+
       <div class="flex-col mt-6 space-between">
         <div class="flex mb-2">
           <input
@@ -74,40 +48,17 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref, watch, reactive, computed } from 'vue';
+import { defineComponent, ref, watch, computed } from 'vue';
 import ledger from '@concords/ledger';
 import loki from 'lokijs';
 
-const useLokiPlugin = (db) => {
-  let collection;
+import Filters from './Filters.vue';
+import TodoList from './TodoList.vue';
 
-  function createCollection({ ledger }) {
-    collection = db.addCollection(ledger.id, { disableMeta: true });
-  }
-
-  return {
-    getCollection: () => collection,
-    plugin: {
-      onLoad: createCollection,
-      onAdd(record) {
-        const item = collection.findOne({ id: record.data.id });
-        if (item) {
-          collection.update({ ...item, ...record.data });
-        } else {
-          collection.insert(record.data);
-        }
-      },
-    },
-  };
-};
-
-const localStoragePlugin = {
-  onUpdate({ ledger }) {
-    localStorage.setItem('ledger', JSON.stringify(ledger));
-  },
-};
+import useLokiPlugin from '../../composables/useLokiPlugin';
 
 export default defineComponent({
+  components: { Filters, TodoList },
   props: {
     user: {
       type: Object,
@@ -132,17 +83,13 @@ export default defineComponent({
     } = useLokiPlugin(new loki('ledger.db'));
 
     const itemInput = ref('');
-    
-    const filters = reactive({
-      searchTerm: '',
-      showCompleted: true,
-    });
+    const searchFilter = ref('');
+    const showCompletedFilter = ref(true);
 
     const { add, commit } = ledger({
       ...props.user,
       ledger: props.ledger,
       plugins: [
-        localStoragePlugin,
         lokiPlugin,
         {
           onReady: handleUpdates,
@@ -155,7 +102,8 @@ export default defineComponent({
       add({
         id: Date.now(),
         title: itemInput.value,
-        completed: false
+        completed: false,
+        created_at: Date.now()
       });
       itemInput.value = '';
     }
@@ -163,8 +111,10 @@ export default defineComponent({
     function completeItem(todo) {
       add({
         title: todo.title,
+        created_at: todo.created_at,
         id: todo.id,
-        completed: !todo.completed
+        completed: !todo.completed,
+        updated_at: Date.now()
       });
     }
 
@@ -176,18 +126,18 @@ export default defineComponent({
       filteredList.value = collection.chain()
         .where((item) => {
           // filter completed items
-          if (!filters.showCompleted && item.completed) {
+          if (!showCompletedFilter.value && item.completed) {
             return false
           }
 
           // filter by search term
-          if (filters.searchTerm) {
-            return new RegExp(filters.searchTerm.toLowerCase())
+          if (searchFilter.value) {
+            return new RegExp(searchFilter.value.toLowerCase())
               .test(item.title.toLowerCase());
           }
           return true;
         })
-        .compoundsort(['timestamp', ['title', true]])
+        .compoundsort([['timestamp', true], ['title', true]])
         .data();
 
       if (ledger) {
@@ -196,7 +146,7 @@ export default defineComponent({
        emit('update:ledger', ledger);
       }
     }
-    watch(filters, handleUpdates);
+    watch([searchFilter, showCompletedFilter], handleUpdates);
       
     const keyHref = computed(() => !file.value || URL.createObjectURL(file.value));
 
@@ -204,12 +154,14 @@ export default defineComponent({
       addItem,
       commit,
       itemInput,
-      filters,
       todos,
       completeItem,
       canCommit,
       filteredList,
       keyHref,
+
+      searchFilter,
+      showCompletedFilter,
     }
   },
 })

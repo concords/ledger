@@ -10,6 +10,7 @@
     "@concords/ledger": "workspace:packages/ledger",
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "autoprefixer": "^9",
+    "date-fns": "^2.19.0",
     "lokijs": "^1.5.11",
     "postcss": "^7",
     "tailwind": "^4.0.0",
