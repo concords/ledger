@@ -15,7 +15,10 @@
         </button>
       </div>
     </div>
-    <ul class="my-8 mx-auto w-full md:w-3/4 lg:w-2/3 my-2 px-2 flex-1 px-6">
+    <ul
+      v-if="items.length"
+      class="my-8 mx-auto w-full md:w-3/4 lg:w-2/3 my-2 px-2 flex-1 px-6"
+    >
       <li
         v-for="item in items"
         :key="item.id"
@@ -46,6 +49,15 @@
         </div>
       </li>
     </ul>
+    <div
+      v-else
+      class="text-center py-10 text-6xl font-medium text-gray-400"
+    >
+      Nothing to see here.
+      <p class="text-sm py-8 font-thin">
+        (pssst. Add a task or adjust your filters)
+      </p>
+    </div>
   </div>
 </template>
 <script>
