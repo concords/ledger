@@ -104,7 +104,7 @@ export default defineComponent({
     watch(() => props.user, (user) => auth(user));
 
     function newLedger() {
-      if (confirm('This is a destructuve action. Are you sure you want to continue?')) {
+      if (confirm('This is a destructive action, are you sure you want to continue? \n\n Any unsaved changes will be lost!')) {
         create();
       }
     }

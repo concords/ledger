@@ -5,7 +5,7 @@
         class="mr-2 py-2 px-4 text-white rounded bg-red-600 disabled:opacity-50"
         @click="$emit('delete')"
       >
-        Delete Ledger
+        Close Ledger
       </button>
     </div>
     <div>
