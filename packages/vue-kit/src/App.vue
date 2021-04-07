@@ -13,11 +13,11 @@
         </li>
         <li class="ml-2">
           <router-link
-            to="/lokijs"
+            to="/todo-app"
             class="bg-gray-100 p-2 rounded"
             active-class="font-bold bg-indigo-100"
           >
-            LokiJS
+            App
           </router-link>
         </li>
         <!-- <li class="ml-2">

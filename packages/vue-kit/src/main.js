@@ -15,8 +15,8 @@ const routes = [
     component: Home,
   },
   {
-    path: '/lokijs',
-    name: 'lokijs',
+    path: '/todo-app',
+    name: 'todo-app',
     component: LokiJS,
   },
   {

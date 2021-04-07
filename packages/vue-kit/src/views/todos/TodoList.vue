@@ -6,6 +6,7 @@
           v-model="newItemInput"
           placeholder="New Todo Item..."
           class="p-2 rounded border border-gray-400 flex-1 mr-2"
+          @keyup.enter="addItem"
         >
         <button
           class="cursor:pointer block mx-auto py-2 px-4 rounded bg-green-400 hover:bg-green-500 text-white"
@@ -55,7 +56,7 @@
     >
       Nothing to see here.
       <p class="text-sm py-8 font-thin">
-        (pssst. Add a task or adjust your filters)
+        (pssst. Add your first task or adjust your filters)
       </p>
     </div>
   </div>
