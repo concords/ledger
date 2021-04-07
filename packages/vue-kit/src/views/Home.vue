@@ -24,5 +24,8 @@
         href="https://www.npmjs.com/package/@concords/identity"
       >@concords/identity</a>
     </p>
+    <p class="my-6 text-gray-400 text-xs font-thin">
+      Unfortunatly not open-source (yet), I have a few deployment tokens to automate first
+    </p>
   </div>
 </template>

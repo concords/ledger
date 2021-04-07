@@ -1,9 +1,9 @@
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
+
 import App from './App.vue';
-import Home from './views/Home.vue';
-import LokiJS from './views/todos/LokiJS.vue';
-import ActivityLog from './views/ActivityLog.vue';
+
+import TodoApp from './views/TodoApp.vue';
 import RawLedger from './views/RawLedger.vue';
 
 import './assets/tailwind.css';
@@ -12,22 +12,17 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home,
+    component: () => import('./views/Home.vue'),
   },
   {
     path: '/todo-app',
     name: 'todo-app',
-    component: LokiJS,
-  },
-  {
-    path: '/activity-log',
-    name: 'activity-log',
-    component: ActivityLog,
+    component: () => import('./views/TodoApp.vue'),
   },
   {
     path: '/raw-ledger',
     name: 'raw-ledger',
-    component: RawLedger,
+    component: () => import('./views/RawLedger.vue'),
   },
 ];
 

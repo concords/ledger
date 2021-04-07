@@ -28,11 +28,11 @@ import { defineComponent, ref, watch } from 'vue';
 import ledger from '@concords/ledger';
 import loki from 'lokijs';
 
-import Filters from './Filters.vue';
-import TodoList from './TodoList.vue';
-import ActionsBar from '../../components/ActionsBar.vue';
+import Filters from '../components/Filters.vue';
+import TodoList from '../components/TodoList.vue';
+import ActionsBar from '../components/ActionsBar.vue';
 
-import useLokiPlugin from '../../composables/useLokiPlugin';
+import useLokiPlugin from '../composables/useLokiPlugin';
 
 export default defineComponent({
   components: { Filters, TodoList, ActionsBar },
