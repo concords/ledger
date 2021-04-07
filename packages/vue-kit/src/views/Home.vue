@@ -21,7 +21,7 @@
       Serverless authentication provided through
       <a
         class="text-blue-500 hover:text-blue-600"
-        href="https://www.npmjs.com/package/@concords/identity"
+        href="https://core.concords.app/modules/identity.html"
       >@concords/identity</a>
     </p>
     <p class="my-6 text-gray-400 text-xs font-thin">
