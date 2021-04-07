@@ -17,6 +17,7 @@
       <li
         v-for="item in items"
         :key="item.id"
+        class="rounded bg-white p-4 my-2"
       > 
         <div class="flex justify-between">
           <label>
@@ -26,9 +27,20 @@
               class="mr-4"
               @click="completeItem(item)"
             >
-            <span>{{ item.title }}</span>
+            <span class="text-lg font-thin">{{ item.title }}</span>
           </label>
-          <span>{{ dateFromNow(item.created_at) }}</span>
+          <div class="flex">
+            <div class="flex flex-col text-xs text-gray-500">
+              <span class="py-2">Created {{ dateFromNow(item.created_at) }}</span>
+              <span>
+                Last updated {{ dateFromNow(item.updated_at || item.created_at) }}
+              </span>
+            </div>
+            <img
+              :src="`https://robohash.org/${item.user.x}${item.user.y}`"
+              class="inline-block w-10 h-10 ring-white shadow rounded-full ml-4 border border-gray-400 my-2"
+            >
+          </div>
         </div>
       </li>
     </ul>

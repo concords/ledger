@@ -60,7 +60,7 @@ export default defineComponent({
     const showCompletedFilter = ref(true);
 
     // Ledger
-    const { add, commit } = ledger({
+    const { add, commit, auth } = ledger({
       ...props.user,
       ledger: props.ledger,
       plugins: [
@@ -99,6 +99,7 @@ export default defineComponent({
       }
     }
     watch([searchFilter, showCompletedFilter], handleUpdates);
+    watch(() => props.user, (user) => auth(user));
 
     return {
       commit,

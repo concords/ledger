@@ -12,9 +12,9 @@ export default (db) => {
       onAdd(record) {
         const item = collection.findOne({ id: record.data.id });
         if (item) {
-          collection.update({ ...item, ...record.data });
+          collection.update({ ...item, ...record.data, user: record.user });
         } else {
-          collection.insert(record.data);
+          collection.insert({ ...record.data, user: record.user });
         }
       },
     },
