@@ -65,15 +65,31 @@ const {
   plugin: lokiPlugin
 } = useLokiPlugin(new loki('ledger.db'));
 
+function handleUpdates({ ledger }) {
+  const collection = getCollection();
+
+  list = collection.chain()
+    .compoundsort([['created_at', false], ['title', true]])
+    .data();
+}
+
 const { add } = Ledger({
   ...user,
   ledger,
   plugins: [
-    lokiPlugin
+    lokiPlugin,
+    {
+      onReady: handleUpdates,
+      onUpdate: handleUpdates,
+    }
   ]
 });
 
-add({ any: 'JSON', data: '.', id: 1 });
+add({
+  title: 'Add any JSON data',
+  created_at: Date.now(),
+  id: 1
+});
 
 ```
 
