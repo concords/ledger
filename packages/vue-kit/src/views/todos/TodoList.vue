@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-y-auto flex flex-col">
+  <div class="overflow-y-auto flex flex-col flex-1">
     <div class="flex p-4 rounded-b w-full md:w-3/4 lg:w-2/3 m-auto sticky top-0 bg-white shadow">
       <input
         v-model="newItemInput"
