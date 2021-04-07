@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <nav class="flex items-center justify-between h-16">
+  <div class="flex flex-col h-screen">
+    <nav class="flex items-center justify-between h-16 bg-gray-700">
       <ul class="flex">
         <li class="ml-2">
           <router-link

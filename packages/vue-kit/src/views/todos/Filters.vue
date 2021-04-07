@@ -3,10 +3,10 @@
     <input
       :value="searchTerm"
       placeholder="Search Items"
-      class="p-2 right rounded-full border border-gray-400 w-64 m-2 align-right"
+      class="py-0 px-6 right bg-white rounded-full border border-gray-400 w-64 m-2 align-right"
       @input="$emit('update:searchTerm', $event.target.value)"
     >
-    <label class="py-4 ml-2">
+    <label class="py-4 ml-2 truncate">
       <input
         :checked="showCompleted"
         type="checkbox"

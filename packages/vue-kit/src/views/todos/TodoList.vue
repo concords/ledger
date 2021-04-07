@@ -1,26 +1,41 @@
 <template>
-  <ul class="mt-8">
-    <li
-      v-for="item in items"
-      :key="item.id"
-    > 
-      <div class="flex justify-between">
-        <label>
-          <input
-            v-model="item.completed"
-            type="checkbox"
-            class="mr-4"
-            @click="$emit('update:item', item)"
-          >
-          <span>{{ item.title }}</span>
-        </label>
-        <span>{{ dateFromNow(item.created_at) }}</span>
-      </div>
-    </li>
-  </ul>
+  <div class="overflow-y-auto flex flex-col">
+    <div class="flex p-4 rounded-b w-full md:w-3/4 lg:w-2/3 m-auto sticky top-0 bg-white shadow">
+      <input
+        v-model="newItemInput"
+        placeholder="New Todo Item..."
+        class="p-2 rounded border border-gray-400 flex-1 mr-2"
+      >
+      <button
+        class="cursor:pointer block mx-auto py-2 px-4 rounded bg-green-400 hover:bg-green-500 text-white"
+        @click="addItem"
+      >
+        Add Todo
+      </button>
+    </div>
+    <ul class="my-8 mx-auto w-full md:w-3/4 lg:w-2/3 my-2 px-2 flex-1 px-6">
+      <li
+        v-for="item in items"
+        :key="item.id"
+      > 
+        <div class="flex justify-between">
+          <label>
+            <input
+              v-model="item.completed"
+              type="checkbox"
+              class="mr-4"
+              @click="completeItem(item)"
+            >
+            <span>{{ item.title }}</span>
+          </label>
+          <span>{{ dateFromNow(item.created_at) }}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { formatRelative } from 'date-fns';
 
 export default defineComponent({
@@ -31,15 +46,37 @@ export default defineComponent({
     }
   },
   emits: [
-    'update:item',
+    'addItem',
   ],
-  setup() {
+  setup(props, { emit }) {
+    const newItemInput = ref('');
+
     function dateFromNow(date) {
       return formatRelative(new Date(date), new Date());
     }
 
+    function addItem() {
+      emit('addItem', {
+        id: Date.now(),
+        title: newItemInput.value,
+        completed: false,
+        created_at: Date.now()
+      });
+      newItemInput.value = '';
+    }
+
+    function completeItem(todo) {
+      emit('addItem', {
+        title: todo.title,
+        created_at: todo.created_at,
+        id: todo.id,
+        completed: !todo.completed,
+        updated_at: Date.now()
+      });
+    }
+
     return {
-      dateFromNow,
+      dateFromNow, addItem, completeItem, newItemInput
     }
   },
 })

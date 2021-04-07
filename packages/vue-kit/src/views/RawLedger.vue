@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <pre>{{ ledger.chain }}</pre>
+  <div class="flex-1 overflow-y-auto shadow-inner p-2">
+    <pre class="text-xs">{{ ledger.chain }}</pre>
   </div>
 </template>
 <script>
