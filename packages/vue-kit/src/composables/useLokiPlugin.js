@@ -9,6 +9,9 @@ export default (db) => {
     getCollection: () => collection,
     plugin: {
       onLoad: createCollection,
+      onDestroy({ ledger }) {
+        db.removeCollection(ledger.id);
+      },
       onAdd(record) {
         const item = collection.findOne({ id: record.data.id });
         if (item) {

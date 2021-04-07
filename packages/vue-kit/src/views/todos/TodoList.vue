@@ -1,17 +1,19 @@
 <template>
   <div class="overflow-y-auto flex flex-col flex-1">
-    <div class="flex p-4 rounded-b w-full md:w-3/4 lg:w-2/3 m-auto sticky top-0 bg-white shadow">
-      <input
-        v-model="newItemInput"
-        placeholder="New Todo Item..."
-        class="p-2 rounded border border-gray-400 flex-1 mr-2"
-      >
-      <button
-        class="cursor:pointer block mx-auto py-2 px-4 rounded bg-green-400 hover:bg-green-500 text-white"
-        @click="addItem"
-      >
-        Add Todo
-      </button>
+    <div class="w-full sticky top-0 bg-white shadow">
+      <div class="flex p-4 rounded-b w-full md:w-3/4 lg:w-2/3 m-auto">
+        <input
+          v-model="newItemInput"
+          placeholder="New Todo Item..."
+          class="p-2 rounded border border-gray-400 flex-1 mr-2"
+        >
+        <button
+          class="cursor:pointer block mx-auto py-2 px-4 rounded bg-green-400 hover:bg-green-500 text-white"
+          @click="addItem"
+        >
+          Add Todo
+        </button>
+      </div>
     </div>
     <ul class="my-8 mx-auto w-full md:w-3/4 lg:w-2/3 my-2 px-2 flex-1 px-6">
       <li

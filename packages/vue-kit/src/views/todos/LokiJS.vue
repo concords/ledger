@@ -19,6 +19,7 @@
     <actions-bar
       :ledger="ledger"
       @commit="commit"
+      @delete="newLedger"
     />
   </div>
 </template>
@@ -47,6 +48,7 @@ export default defineComponent({
   },
   emits: [
     'update:ledger',
+    'create:ledger'
   ],
   setup(props, { emit }) {
     // LokiJS Plugin
@@ -60,7 +62,7 @@ export default defineComponent({
     const showCompletedFilter = ref(true);
 
     // Ledger
-    const { add, commit, auth } = ledger({
+    const { add, commit, auth, destroy, create } = ledger({
       ...props.user,
       ledger: props.ledger,
       plugins: [
@@ -101,9 +103,16 @@ export default defineComponent({
     watch([searchFilter, showCompletedFilter], handleUpdates);
     watch(() => props.user, (user) => auth(user));
 
+    function newLedger() {
+      if (confirm('This is a destructuve action. Are you sure you want to continue?')) {
+        create();
+      }
+    }
+
     return {
       commit,
       add,
+      newLedger,
       filteredList,
       searchFilter,
       showCompletedFilter,

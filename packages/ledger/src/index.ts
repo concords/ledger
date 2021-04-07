@@ -9,7 +9,8 @@ const availableHooks = [
   'onUnload',
   'onReplay',
   'onCommit',
-  'onAdd'
+  'onAdd',
+  'onDestroy'
 ];
 
 export default (config = {
@@ -133,6 +134,10 @@ export default (config = {
     runHooks('onReplay', { from, to, ...state });
   }
 
+  function destroy() {
+    runHooks('onDestroy', state);
+  }
+
   async function commit() {
     state.ledger = await mine(state.ledger);
     runHooks('onCommit', state);
@@ -156,5 +161,6 @@ export default (config = {
     replay,
     commit,
     add,
+    destroy,
   }
 }
