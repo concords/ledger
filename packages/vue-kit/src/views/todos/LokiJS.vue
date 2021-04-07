@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col flex-1 overflow-hidden bg-gray-50">
     <div class="flex p-2 justify-between shadow-inner bg-white border-b border-gray-200">
-      <div class="text-3xl py-2 truncate">
-        TODO APP
-      </div>
+      <h1 class="py-2 text-3xl truncate">
+        Todo App
+      </h1>
 
       <filters
         v-model:searchTerm="searchFilter"
