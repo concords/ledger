@@ -82,30 +82,24 @@ export default (config = {
 
     const timestamp = Date.now();
     const id = await hash_data(`${JSON.stringify(identity)}_${timestamp}`);
-
-    const data = {
-        ...transaction,
-    };
-
-    if (!data.id) {
-      data.id = await hash_data(`${JSON.stringify(data)}_${timestamp}`);
-    }
     
-    const signedTransaction = {
-      data,
+    const record = {
+      data: transaction,
       id,
       timestamp,
       user: identity,
     }
 
-    const signature = await sign(state.signingKey, data);
+    const signature = await sign(state.signingKey, record);
     
-    state.ledger = await add_transaction({
+    const signedRecord = {
       signature,
-      ...signedTransaction
-    }, { ...state.ledger });
+      ...record
+    };
 
-    runHooks('onAdd', signedTransaction);
+    state.ledger = await add_transaction(signedRecord, { ...state.ledger });
+
+    runHooks('onAdd', signedRecord);
     runHooks('onUpdate', state);
   }
 

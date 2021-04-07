@@ -1,10 +1,10 @@
 <template>
   <div>
     <h1 class="text-3xl text-center">
-      Todo App
+      Vue Todo App
     </h1>
     <h2 class="text-xl text-center">
-      @concords/ledger & LokiJS
+      LokiJS Plugin
     </h2>
     <div class="mx-auto lg:w-1/2 md:w-3/4 my-2 px-2">
       <div class="flex justify-end">
@@ -90,9 +90,12 @@ const useLokiPlugin = (db) => {
     plugin: {
       onLoad: createCollection,
       onAdd(record) {
-        collection[
-          record.data.$loki ? 'update' : 'insert'
-        ](record.data);
+        const item = collection.findOne({ id: record.data.id });
+        if (item) {
+          collection.update({ ...item, ...record.data });
+        } else {
+          collection.insert(record.data);
+        }
       },
     },
   };
@@ -149,12 +152,20 @@ export default defineComponent({
     });
 
     function addItem() {
-      add({ title: itemInput.value, completed: false });
+      add({
+        id: Date.now(),
+        title: itemInput.value,
+        completed: false
+      });
       itemInput.value = '';
     }
 
     function completeItem(todo) {
-      add({ ...todo, completed: !todo.completed });
+      add({
+        title: todo.title,
+        id: todo.id,
+        completed: !todo.completed
+      });
     }
 
     const filteredList = ref([]);
@@ -162,19 +173,22 @@ export default defineComponent({
     function handleUpdates({ ledger }) {
       const collection = getCollection();
 
-      filteredList.value = collection.where((item) => {
-        // filter completed items
-        if (!filters.showCompleted && item.completed) {
-          return false
-        }
+      filteredList.value = collection.chain()
+        .where((item) => {
+          // filter completed items
+          if (!filters.showCompleted && item.completed) {
+            return false
+          }
 
-        // filter by search term
-        if (filters.searchTerm) {
-          return new RegExp(filters.searchTerm.toLowerCase())
-            .test(item.title.toLowerCase());
-        }
-        return true;
-      });
+          // filter by search term
+          if (filters.searchTerm) {
+            return new RegExp(filters.searchTerm.toLowerCase())
+              .test(item.title.toLowerCase());
+          }
+          return true;
+        })
+        .compoundsort(['timestamp', ['title', true]])
+        .data();
 
       if (ledger) {
        canCommit.value = ledger.pending_transactions.length;
