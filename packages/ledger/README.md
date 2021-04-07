@@ -8,7 +8,9 @@
 ## Getting Started
 
 ```bash
-$ npm install @concords/ledger @concords/identity --save
+$ npm install @concords/ledger --save
+
+$ yarn add @concords/ledger
 ```
 
 ### Ledger
@@ -25,58 +27,55 @@ const {
 } = Ledger({
   plugins,
 });
+
+load(ledger);
+auth(user);
 ```
 
 ### Plugins
 
+Example using https://github.com/techfort/LokiJS
+
 ```javascript
+const useLokiPlugin = (db) => {
+  let collection;
 
-// Local Storage plugin
-const lsPlugin = {
-  onLoad({ ledger }) {
-    localStorage.setItem('ledger', JSON.stringify(ledger))
-  },
-  onUpdate({ ledger }) {
-    localStorage.setItem('ledger', JSON.stringify(ledger))
-  },
-};
-
-const useTodoStore = () => {
-  let todos = [];
+  function createCollection({ ledger }) {
+    collection = db.addCollection(ledger.id, { disableMeta: true });
+  }
 
   return {
-    todos,
+    getCollection: () => collection,
     plugin: {
-      async onRecord(record) {
-        const index = todos.findIndex(({ id }) => id === record.data.id);
-        
-        if (index > -1) {
-          todos.splice(index, 1, record.data);
+      onLoad: createCollection,
+      onAdd(record) {
+        const item = collection.findOne({ id: record.data.id });
+        if (item) {
+          collection.update({ ...item, ...record.data });
         } else {
-          todos = [...todos, record.data];
+          collection.insert(record.data);
         }
-      }
-    }
+      },
+    },
   };
-}
+};
 
-const { todos, plugin: todoPlugin } = useTodoStore();
-const { add, load } = Ledger({
+const {
+  getCollection,
+  plugin: lokiPlugin
+} = useLokiPlugin(new loki('ledger.db'));
+
+const { add } = Ledger({
+  ...user,
+  ledger,
   plugins: [
-    lsPlugin,
-    todoPlugin,
-    {
-      onUpdate() {
-        console.log(todos);
-      }
-    }
+    lokiPlugin
   ]
 });
 
+add({ any: 'JSON', data: '.', id: 1 });
+
 ```
-
-### Load
-
 
 ### Identity
 
@@ -92,6 +91,7 @@ const { add, load } = Ledger({
 
 ```bash
 $ npm install @concords/identity --save
+
 $ yarn add @concords/identity
 ```
 
@@ -100,31 +100,4 @@ import { createIdentity } from '@concords/identity';
 
 const user = await createIdentity();
 await auth(user);
-```
-
-```javascript
-import Ledger from '@concords/ledger';
-import { createIdentity } from '@concords/identity';
-
-export default async function() {
-  
-
-  load();
-
-  function addItem() {
-    record({
-        title: `Task ${todos.length + 1}`,
-        completed: false,
-      }
-    );
-  }
-
-  function completeItem(todo) {
-    record({
-        ...todo,
-        completed: !todo.completed
-      }
-    );
-  }
-};
 ```
