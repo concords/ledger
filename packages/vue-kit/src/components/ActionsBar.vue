@@ -44,7 +44,7 @@ export default {
     const file = ref('');
 
     watch(() => props.ledger, (ledger) => {
-      pendingChanges.value = ledger.pending_transactions.length;
+      pendingChanges.value = ledger.pending_records.length;
       file.value = new Blob([JSON.stringify(ledger, null, 2, 2)], { type: 'text/json' });
     });
     

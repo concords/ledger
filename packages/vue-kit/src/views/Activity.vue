@@ -96,13 +96,13 @@ export default defineComponent({
     const pendingRecords = ref([]);
 
     function handleUpdates({ ledger }) {
-      const { chain, pending_transactions } = ledger;
+      const { chain, pending_records } = ledger;
 
       records.value = [
-          ...chain.reduce((acc, block) => ([ ...acc, ...block.transactions ]), []),
+          ...chain.reduce((acc, block) => ([ ...acc, ...block.records ]), []),
       ].sort((a, b) => b.timestamp - a.timestamp)
       
-      pendingRecords.value = pending_transactions.sort((a, b) => b.timestamp - a.timestamp);
+      pendingRecords.value = pending_records.sort((a, b) => b.timestamp - a.timestamp);
     }
 
     return {
