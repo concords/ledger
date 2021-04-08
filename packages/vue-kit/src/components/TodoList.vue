@@ -1,15 +1,15 @@
 <template>
-  <div class="overflow-y-auto flex flex-col flex-1">
-    <div class="w-full sticky top-0 bg-white shadow">
-      <div class="flex p-4 rounded-b w-full md:w-3/4 lg:w-2/3 m-auto">
+  <div class="flex flex-col flex-1 bg-gray-50 m-2">
+    <div class="w-full sticky top-2 bg-white shadow bg-white">
+      <div class="flex rounded-b w-full m-auto">
         <input
           v-model="newItemInput"
           placeholder="New Todo Item..."
-          class="p-2 rounded border border-gray-400 flex-1 mr-2"
+          class="py-4 px-2 border-0 flex-1"
           @keyup.enter="addItem"
         >
         <button
-          class="cursor:pointer block mx-auto py-2 px-4 rounded bg-green-400 hover:bg-green-500 text-white"
+          class="cursor:pointer block mx-auto py-2 px-4 bg-green-400 hover:bg-green-500 text-white"
           @click="addItem"
         >
           Add Todo
@@ -18,12 +18,12 @@
     </div>
     <ul
       v-if="items.length"
-      class="my-8 mx-auto w-full md:w-3/4 lg:w-2/3 my-2 px-2 flex-1 px-6"
+      class="mx-auto w-full flex-1 py-2 px-4 overflow-y-scroll"
     >
       <li
         v-for="item in items"
         :key="item.id"
-        class="rounded bg-white p-4 my-2"
+        class="rounded bg-white p-4 my-2 shadow"
       > 
         <div class="flex justify-between">
           <label>
@@ -36,19 +36,22 @@
             <span class="text-lg font-thin">{{ item.title }}</span>
           </label>
           <div class="flex">
-            <div class="flex flex-col text-xs text-gray-500">
+            <div class="flex flex-col text-sm leading-6 text-gray-500 text-right">
               <div class="flex justify-between py-2">
-                <span class="">Created {{ dateFromNow(item.created_at) }}</span>
+                <span class="block w-full">Created {{ dateFromNow(item.created_at) }}</span>
                 <img
                   :src="`https://robohash.org/${item.created_by.x}${item.created_by.y}`"
-                  class="inline-block w-4 h-4 ring-white shadow rounded-full ml-4 border border-gray-400"
+                  class="inline-block w-6 h-6 ring-white shadow rounded-full ml-4 border border-gray-400"
                 >
               </div>
-              <div class="flex justify-between">
-                <span class="">Last updated {{ dateFromNow(item.updated_at || item.created_at) }}</span>
+              <div
+                v-if="item.updated_at"
+                class="flex justify-between"
+              >
+                <span class="block w-full">Last updated {{ dateFromNow(item.updated_at) }}</span>
                 <img
-                  :src="`https://robohash.org/${item.user.x}${item.user.y}`"
-                  class="inline-block w-4 h-4 ring-white shadow rounded-full ml-4 border border-gray-400"
+                  :src="`https://robohash.org/${item.updated_by.x}${item.updated_by.y}`"
+                  class="inline-block w-6 h-6 ring-white shadow rounded-full ml-4 border border-gray-400"
                 >
               </div>
             </div>
@@ -93,7 +96,6 @@ export default defineComponent({
     }
 
     function addItem() {
-      console.log(props.user);
       emit('addItem', {
         id: Date.now(),
         title: newItemInput.value,
@@ -108,9 +110,11 @@ export default defineComponent({
       emit('addItem', {
         title: todo.title,
         created_at: todo.created_at,
+        created_by: todo.created_by,
+        updated_by: props.user.identity,
+        updated_at: Date.now(),
         id: todo.id,
-        completed: !todo.completed,
-        updated_at: Date.now()
+        completed: !todo.completed
       });
     }
 

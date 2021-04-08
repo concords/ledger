@@ -1,32 +1,50 @@
 <template>
-  <div class="flex flex-col h-screen">
+  <div class="flex flex-col h-screen overflow-hidden">
     <nav class="flex items-center justify-between h-16 bg-gray-700">
-      <ul class="flex text-white">
-        <li class="ml-2">
+      <ul class="flex text-gray-200">
+        <li class="ml-2 mr-2">
           <router-link
             to="/"
             class="hover:text-blue-400 hover:font-bold"
-            active-class="font-bold"
+            active-class="font-bold text-white"
           >
             Home
           </router-link>
         </li>
-        <li class="ml-2">
+        <li class="ml-2 mr-2">
           <router-link
-            to="/todo-app"
+            to="/app"
             class="hover:text-blue-400 hover:font-bold"
-            active-class="font-bold"
+            active-class="font-bold text-white"
           >
             App
           </router-link>
         </li>
-        <li class="ml-2">
+        <li class="ml-2 mr-2">
           <router-link
-            to="/raw-ledger"
+            to="/data"
             class="hover:text-blue-400 hover:font-bold"
-            active-class="font-bold"
+            active-class="font-bold text-white"
           >
-            Raw Ledger
+            Data
+          </router-link>
+        </li>
+        <li class="ml-2 mr-2">
+          <router-link
+            to="/activity"
+            class="hover:text-blue-400 hover:font-bold"
+            active-class="font-bold text-white"
+          >
+            Activity
+          </router-link>
+        </li>
+        <li class="ml-2 mr-2">
+          <router-link
+            to="/json"
+            class="hover:text-blue-400 hover:font-bold"
+            active-class="font-bold text-white"
+          >
+            JSON
           </router-link>
         </li>
       </ul>

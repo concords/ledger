@@ -3,9 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import App from './App.vue';
 
-import TodoApp from './views/TodoApp.vue';
-import RawLedger from './views/RawLedger.vue';
-
 import './assets/tailwind.css';
 
 const routes = [
@@ -15,14 +12,24 @@ const routes = [
     component: () => import('./views/Home.vue'),
   },
   {
-    path: '/todo-app',
-    name: 'todo-app',
+    path: '/app',
+    name: 'app',
     component: () => import('./views/TodoApp.vue'),
   },
   {
-    path: '/raw-ledger',
-    name: 'raw-ledger',
-    component: () => import('./views/RawLedger.vue'),
+    path: '/data',
+    name: 'data',
+    component: () => import('./views/Explorer.vue'),
+  },
+  {
+    path: '/activity',
+    name: 'activity',
+    component: () => import('./views/Activity.vue'),
+  },
+  {
+    path: '/json',
+    name: 'json',
+    component: () => import('./views/LedgerJson.vue'),
   },
 ];
 

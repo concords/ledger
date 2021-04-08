@@ -1,43 +1,57 @@
 <template>
-  <div class="flex flex-col flex-1 bg-gray-50 overflow-auto">
+  <div class="flex flex-col flex-1 overflow-hidden bg-gray-50">
     <div class="flex p-2 justify-between shadow-inner bg-white border-b border-gray-200">
       <h1 class="py-2 text-3xl truncate">
-        Todo App
+        Data
       </h1>
-
-      <filters
-        v-model:searchTerm="searchFilter"
-        v-model:showCompleted="showCompletedFilter"
-      />
     </div>
-    <div class="flex flex-1 overflow-x-hidden">
-      <actions-bar
-        :ledger="ledger"
-        @commit="commit"
-        @delete="newLedger"
-      />
-
-      <todo-list
-        :items="filteredList"
-        :user="user"
-        @addItem="add"
-      />
+    <div class="overflow-x-scroll">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th
+              v-for="cell in headerCells"
+              :key="`header_${cell}`"
+              scope="col"
+              class="bg-gray-50 sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              {{ cell }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr
+            v-for="item in filteredList"
+            :key="item.id"
+          >
+            <td
+              v-for="cell in headerCells"
+              :key="`body_${item.id}_${cell}`"
+              class="px-6 py-4 whitespace-nowrap"
+            > 
+              <img
+                v-if="item[cell] && item[cell].x && item[cell].y"
+                :src="`https://robohash.org/${item[cell].x}${item[cell].y}`"
+                class="inline-block w-10 h-10 ring-white shadow rounded-full ml-4 border border-gray-400"
+              >
+              <p v-else>
+                {{ item[cell] }}
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
 <script>
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, ref, watch, computed } from 'vue';
 import ledger from '@concords/ledger';
 import loki from 'lokijs';
-
-import Filters from '../components/Filters.vue';
-import TodoList from '../components/TodoList.vue';
-import ActionsBar from '../components/ActionsBar.vue';
 
 import useLokiPlugin from '../composables/useLokiPlugin';
 
 export default defineComponent({
-  components: { Filters, TodoList, ActionsBar },
   props: {
     user: {
       type: Object,
@@ -48,11 +62,7 @@ export default defineComponent({
       default: null,
     },
   },
-  emits: [
-    'update:ledger',
-    'create:ledger'
-  ],
-  setup(props, { emit }) {
+  setup(props) {
     // LokiJS Plugin
     const {
       getCollection,
@@ -64,25 +74,27 @@ export default defineComponent({
     const showCompletedFilter = ref(true);
 
     // Ledger
-    const { add, commit, auth, destroy, create } = ledger({
+    ledger({
       ...props.user,
       ledger: props.ledger,
       plugins: [
         lokiPlugin,
         {
           onReady: handleUpdates,
-          onUpdate: handleUpdates,
         }
       ],
     });
 
     const filteredList = ref([]);
+    const headerTypes = ref(new Set());
 
-    function handleUpdates({ ledger }) {
+    function handleUpdates() {
       const collection = getCollection();
 
       filteredList.value = collection.chain()
         .where((item) => {
+          Object.keys(item).filter((key) => key !== '$loki').forEach(headerTypes.value.add, headerTypes.value)
+
           // filter completed items
           if (!showCompletedFilter.value && item.completed) {
             return false
@@ -97,24 +109,12 @@ export default defineComponent({
         })
         .compoundsort([['created_at', false], ['title', true]])
         .data();
-
-      if (ledger) {
-       emit('update:ledger', ledger);
-      }
     }
     watch([searchFilter, showCompletedFilter], handleUpdates);
-    watch(() => props.user, (user) => auth(user));
-
-    function newLedger() {
-      if (confirm('This is a destructive action, are you sure you want to continue? \n\n Any unsaved changes will be lost!')) {
-        create();
-      }
-    }
+    const headerCells = computed(() => Array.from(headerTypes.value));
 
     return {
-      commit,
-      add,
-      newLedger,
+      headerCells,
       filteredList,
       searchFilter,
       showCompletedFilter,
