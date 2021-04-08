@@ -5,6 +5,12 @@
 >
 > agreement or harmony between people or groups.
 
+
+Try the demo 👉 https://demo.concords.app
+
+----
+
+
 ## Getting Started
 
 ```bash
@@ -16,27 +22,27 @@ $ yarn add @concords/ledger
 ### Ledger
 
 ```javascript
-import Ledger from '@concords/ledger';
+import ledger from '@concords/ledger';
 
 const {
   auth,
   load,
+  create(),
   replay,
   commit,
   add,
-} = Ledger({
-  plugins,
-});
+} = ledger({});
 
-load(ledger);
-auth(user);
+create();
+auth(identity);
 ```
 
 ### Plugins
 
-Example using https://github.com/techfort/LokiJS
+Example using [LokiJS](https://github.com/techfort/LokiJS)
 
 ```javascript
+// plugin.js
 const useLokiPlugin = (db) => {
   let collection;
 
@@ -59,6 +65,11 @@ const useLokiPlugin = (db) => {
     },
   };
 };
+```
+
+```javascript
+import loki from 'lokijs';
+import useLokiPlugin from './plugin';
 
 const {
   getCollection,
@@ -73,7 +84,7 @@ function handleUpdates({ ledger }) {
     .data();
 }
 
-const { add } = Ledger({
+const { add, commit } = Ledger({
   ...user,
   ledger,
   plugins: [
@@ -84,16 +95,22 @@ const { add } = Ledger({
     }
   ]
 });
+```
 
+### Immutable records
+```javascript
 add({
   title: 'Add any JSON data',
   created_at: Date.now(),
   id: 1
 });
 
+commit();
 ```
 
 ### Identity
+
+Identity is provided through [Concords Identity](https://core.concords.app/modules/identity.html) in the format.
 
 ```JSON
 {
@@ -103,17 +120,4 @@ add({
     "y": "RuOLBSMJmD-BK5URkjwP32MoGLRzmyqNUIrdTpBOwnGP2BZepXzMNu9114YvMOoG"
   }
 }
-```
-
-```bash
-$ npm install @concords/identity --save
-
-$ yarn add @concords/identity
-```
-
-``` javascript
-import { createIdentity } from '@concords/identity';
-
-const user = await createIdentity();
-await auth(user);
 ```
