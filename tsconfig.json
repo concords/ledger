@@ -17,6 +17,7 @@
   "typedocOptions": {
     "entryPoints": [
       "packages/identity/src/index.ts",
+      "packages/core/src/index.ts",
       "packages/ledger/src/index.ts",
     ],
     "out": "docs"

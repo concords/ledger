@@ -71,22 +71,12 @@ export default (
   }
 ): ILedgerAPI => {
 
-  let hooks = {};
-
-  async function runHooks(type, props) {
-    let i = 0;
-    let len = hooks[type].length;
-    for (;i < len; i++) {
-      await hooks[type][i](JSON.parse(JSON.stringify(props)))
-    }
-  };
-
   const state = {
     ledger: null,
     signingKey: null,
   };
 
-  hooks = availableHooks.reduce((acc, curr) => ({
+  let hooks = availableHooks.reduce((acc, curr) => ({
     ...acc,
     [curr]: [],
   }), {});
@@ -98,6 +88,14 @@ export default (
       }
     });
   });
+
+  async function runHooks(type, props) {
+    let i = 0;
+    let len = hooks[type].length;
+    for (;i < len; i++) {
+      await hooks[type][i](JSON.parse(JSON.stringify(props)))
+    }
+  };
 
   async function auth({ identity, secret }) {
     state.signingKey = await importSigningKey(identity, secret);
