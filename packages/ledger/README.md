@@ -37,11 +37,21 @@ const {
 } = ledger();
 ```
 
-#### Auth
+### Auth
 
 To ensure integrity in the ledger, Concords uses an ECDSA key-pair to sign and verify transactions added to the ledger. The Keys are generated in the users browser using the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API).
 
 [Docs](https://docs.concords.app/guide/identity.html) | [TypeDoc](https://typedoc.concords.app/modules/identity_src.html)
+
+```JSON
+{
+  "secret": "JRxW6TjcK76B1KLKi7uo5syiKAFkgPWmSb6cmnv95i2cV5mClSv1dYCDD8uuYs3S",
+  "identity": {
+    "x": "ztE--LL6yBgQOy7Yr6egGZYi4n3OLWX22GsBCYPx-efYNvePZQ6GEYT1SIvaIgZA",
+    "y": "RuOLBSMJmD-BK5URkjwP32MoGLRzmyqNUIrdTpBOwnGP2BZepXzMNu9114YvMOoG"
+  }
+}
+```
 
 
 ### Plugins
@@ -75,6 +85,7 @@ const useLokiPlugin = (db) => {
 ```
 
 ```javascript
+import ledger from '@concords/ledger';
 import loki from 'lokijs';
 import useLokiPlugin from './plugin';
 
@@ -91,7 +102,7 @@ function handleUpdates({ ledger }) {
     .data();
 }
 
-const { add, commit } = Ledger({
+const { add, commit } = ledger({
   ...user,
   ledger,
   plugins: [
@@ -102,29 +113,4 @@ const { add, commit } = Ledger({
     }
   ]
 });
-```
-
-### Immutable records
-```javascript
-add({
-  title: 'Add any JSON data',
-  created_at: Date.now(),
-  id: 1
-});
-
-commit();
-```
-
-### Identity
-
-Identity is provided through [Concords Identity](https://core.concords.app/modules/identity.html) in the format.
-
-```JSON
-{
-  "secret": "JRxW6TjcK76B1KLKi7uo5syiKAFkgPWmSb6cmnv95i2cV5mClSv1dYCDD8uuYs3S",
-  "identity": {
-    "x": "ztE--LL6yBgQOy7Yr6egGZYi4n3OLWX22GsBCYPx-efYNvePZQ6GEYT1SIvaIgZA",
-    "y": "RuOLBSMJmD-BK5URkjwP32MoGLRzmyqNUIrdTpBOwnGP2BZepXzMNu9114YvMOoG"
-  }
-}
 ```

@@ -1,6 +1,6 @@
 {
   "name": "@concords/ledger",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "A tamper-proof Javascript data-ledger",
   "repository": {
     "type": "git",
