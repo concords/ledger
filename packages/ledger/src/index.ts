@@ -1,7 +1,5 @@
-import { addRecord, createLedger, mine, hashData } from '@concords/core';
-import { exportIdentity, sign, importSigningKey } from '@concords/identity';
-import { ILedger } from '@concords/core/types';
-import { IIdentity, IAuthKeys } from '@concords/identity/types';
+import { addRecord, createLedger, mine, hashData, ILedger } from '@concords/core';
+import { exportIdentity, sign, importSigningKey, IIdentity, IAuthKeys } from '@concords/identity';
 
 interface IConfig {
   plugins: Array<Object>,
