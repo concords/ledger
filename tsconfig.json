@@ -13,5 +13,12 @@
     "declaration": true,
     "importHelpers": true,
     "moduleResolution": "node",
+  },
+  "typedocOptions": {
+    "entryPoints": [
+      "packages/identity/src/index.ts",
+      "packages/ledger/src/index.ts",
+    ],
+    "out": "docs"
   }
 }
