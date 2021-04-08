@@ -37,15 +37,21 @@
           </label>
           <div class="flex">
             <div class="flex flex-col text-xs text-gray-500">
-              <span class="py-2">Created {{ dateFromNow(item.created_at) }}</span>
-              <span>
-                Last updated {{ dateFromNow(item.updated_at || item.created_at) }}
-              </span>
+              <div class="flex justify-between py-2">
+                <span class="">Created {{ dateFromNow(item.created_at) }}</span>
+                <img
+                  :src="`https://robohash.org/${item.created_by.x}${item.created_by.y}`"
+                  class="inline-block w-4 h-4 ring-white shadow rounded-full ml-4 border border-gray-400"
+                >
+              </div>
+              <div class="flex justify-between">
+                <span class="">Last updated {{ dateFromNow(item.updated_at || item.created_at) }}</span>
+                <img
+                  :src="`https://robohash.org/${item.user.x}${item.user.y}`"
+                  class="inline-block w-4 h-4 ring-white shadow rounded-full ml-4 border border-gray-400"
+                >
+              </div>
             </div>
-            <img
-              :src="`https://robohash.org/${item.user.x}${item.user.y}`"
-              class="inline-block w-10 h-10 ring-white shadow rounded-full ml-4 border border-gray-400 my-2"
-            >
           </div>
         </div>
       </li>
@@ -70,7 +76,11 @@ export default defineComponent({
     items: {
       type: Array,
       default: () => ([]),
-    }
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
   },
   emits: [
     'addItem',
@@ -83,11 +93,13 @@ export default defineComponent({
     }
 
     function addItem() {
+      console.log(props.user);
       emit('addItem', {
         id: Date.now(),
         title: newItemInput.value,
         completed: false,
-        created_at: Date.now()
+        created_at: Date.now(),
+        created_by: props.user.identity,
       });
       newItemInput.value = '';
     }

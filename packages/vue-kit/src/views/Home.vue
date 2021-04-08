@@ -7,15 +7,11 @@
       Vue 3 Serverless Todo App
     </h2>
     <p>
-      Built with
+      Demo app for
       <a
         class="text-blue-500 hover:text-blue-600"
         href="https://www.npmjs.com/package/@concords/ledger"
-      >@concords/ledger</a> and
-      <a
-        class="text-blue-500 hover:text-blue-600"
-        href="https://github.com/techfort/LokiJS"
-      >LokiJS</a>
+      >@concords/ledger</a>
     </p>
     <p class="my-4">
       Serverless authentication provided through
@@ -25,7 +21,7 @@
       >@concords/identity</a>
     </p>
     <p class="my-6 text-gray-400 text-xs font-thin">
-      Unfortunatly not open-source (yet), I have a few deployment tokens to automate first
+      not open-source (yet), I have a few deployment tokens to automate first
     </p>
   </div>
 </template>

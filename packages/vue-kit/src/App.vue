@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col h-screen">
     <nav class="flex items-center justify-between h-16 bg-gray-700">
-      <ul class="flex">
+      <ul class="flex text-white">
         <li class="ml-2">
           <router-link
             to="/"
-            class="bg-gray-100 p-2 rounded"
-            active-class="font-bold bg-indigo-100"
+            class="hover:text-blue-400 hover:font-bold"
+            active-class="font-bold"
           >
             Home
           </router-link>
@@ -14,26 +14,17 @@
         <li class="ml-2">
           <router-link
             to="/todo-app"
-            class="bg-gray-100 p-2 rounded"
-            active-class="font-bold bg-indigo-100"
+            class="hover:text-blue-400 hover:font-bold"
+            active-class="font-bold"
           >
             App
           </router-link>
         </li>
-        <!-- <li class="ml-2">
-          <router-link
-            to="/activity-log"
-            class="bg-gray-100 p-2 rounded"
-            active-class="font-bold bg-indigo-100"
-          >
-            Activity Log
-          </router-link>
-        </li> -->
         <li class="ml-2">
           <router-link
             to="/raw-ledger"
-            class="bg-gray-100 p-2 rounded"
-            active-class="font-bold bg-indigo-100"
+            class="hover:text-blue-400 hover:font-bold"
+            active-class="font-bold"
           >
             Raw Ledger
           </router-link>

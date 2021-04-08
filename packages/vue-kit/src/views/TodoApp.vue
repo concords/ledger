@@ -13,6 +13,7 @@
     
     <todo-list
       :items="filteredList"
+      :user="user"
       @addItem="add"
     />
 
