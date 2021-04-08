@@ -4,10 +4,10 @@ import { ILedger } from '@concords/core/types';
 import { IIdentity, IAuthKeys } from '@concords/identity/types';
 
 interface IConfig {
-  readonly plugins: Array<Object>,
-  readonly identity: IIdentity,
-  readonly secret: string,
-  readonly ledger: ILedger,
+  plugins: Array<Object>,
+  identity: IIdentity,
+  secret: string,
+  ledger: ILedger,
 }
 
 interface IAuthFunc {
@@ -160,7 +160,7 @@ export default (
     await runHooks('onUpdate', state);
   }
 
-  async function replay(from, to) {
+  async function replay(from?, to?) {
     if (!state.ledger) {
       console.warn('Cannot replay: ledger not loaded');
       return;
