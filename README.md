@@ -1,84 +1,123 @@
-# An immutable Javascript data-ledger.
+# A tamper-proof Javascript data-ledger.
 
 > ## concord
 > /ˈkɒŋkɔːd/
 >
 > agreement or harmony between people or groups.
 
+
+Demo App 👉 https://demo.concords.app
+TypeDocs 👉 https://typedoc.concords.app
+
+----
+
+
 ## Getting Started
 
 ```bash
-$ npm install @concords/ledger @concords/identity --save
+$ npm install @concords/ledger --save
+
+$ yarn add @concords/ledger
 ```
 
 ### Ledger
 
 ```javascript
-import Ledger from '@concords/ledger';
+import ledger from '@concords/ledger';
 
 const {
   auth,
   load,
+  create,
   replay,
   commit,
   add,
-} = Ledger({
-  plugins,
-});
+  destroy,
+} = ledger();
 ```
+
+#### Auth
+
+To ensure integrity in the ledger, Concords uses an ECDSA key-pair to sign and verify transactions added to the ledger. The Keys are generated in the users browser using the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API).
+
+[Docs](https://docs.concords.app/guide/identity.html)
+[TypeDoc](https://typedoc.concords.app/modules/identity_src.html)
+
 
 ### Plugins
 
+Example using [LokiJS](https://github.com/techfort/LokiJS)
+
 ```javascript
+// plugin.js
+const useLokiPlugin = (db) => {
+  let collection;
 
-// Local Storage plugin
-const lsPlugin = {
-  onLoad({ ledger }) {
-    localStorage.setItem('ledger', JSON.stringify(ledger))
-  },
-  onUpdate({ ledger }) {
-    localStorage.setItem('ledger', JSON.stringify(ledger))
-  },
-};
-
-const useTodoStore = () => {
-  let todos = [];
+  function createCollection({ ledger }) {
+    collection = db.addCollection(ledger.id, { disableMeta: true });
+  }
 
   return {
-    todos,
+    getCollection: () => collection,
     plugin: {
-      async onRecord(record) {
-        const index = todos.findIndex(({ id }) => id === record.data.id);
-        
-        if (index > -1) {
-          todos.splice(index, 1, record.data);
+      onLoad: createCollection,
+      onAdd(record) {
+        const item = collection.findOne({ id: record.data.id });
+        if (item) {
+          collection.update({ ...item, ...record.data });
         } else {
-          todos = [...todos, record.data];
+          collection.insert(record.data);
         }
-      }
-    }
+      },
+    },
   };
+};
+```
+
+```javascript
+import loki from 'lokijs';
+import useLokiPlugin from './plugin';
+
+const {
+  getCollection,
+  plugin: lokiPlugin
+} = useLokiPlugin(new loki('ledger.db'));
+
+function handleUpdates({ ledger }) {
+  const collection = getCollection();
+
+  list = collection.chain()
+    .compoundsort([['created_at', false], ['title', true]])
+    .data();
 }
 
-const { todos, plugin: todoPlugin } = useTodoStore();
-const { add, load } = Ledger({
+const { add, commit } = Ledger({
+  ...user,
+  ledger,
   plugins: [
-    lsPlugin,
-    todoPlugin,
+    lokiPlugin,
     {
-      onUpdate() {
-        console.log(todos);
-      }
+      onReady: handleUpdates,
+      onUpdate: handleUpdates,
     }
   ]
 });
-
 ```
 
-### Load
+### Immutable records
+```javascript
+add({
+  title: 'Add any JSON data',
+  created_at: Date.now(),
+  id: 1
+});
 
+commit();
+```
 
 ### Identity
+
+Identity is provided through [Concords Identity](https://core.concords.app/modules/identity.html) in the format.
 
 ```JSON
 {
@@ -88,43 +127,4 @@ const { add, load } = Ledger({
     "y": "RuOLBSMJmD-BK5URkjwP32MoGLRzmyqNUIrdTpBOwnGP2BZepXzMNu9114YvMOoG"
   }
 }
-```
-
-```bash
-$ npm install @concords/identity --save
-$ yarn add @concords/identity
-```
-
-``` javascript
-import { createIdentity } from '@concords/identity';
-
-const user = await createIdentity();
-await auth(user);
-```
-
-```javascript
-import Ledger from '@concords/ledger';
-import { createIdentity } from '@concords/identity';
-
-export default async function() {
-  
-
-  load();
-
-  function addItem() {
-    record({
-        title: `Task ${todos.length + 1}`,
-        completed: false,
-      }
-    );
-  }
-
-  function completeItem(todo) {
-    record({
-        ...todo,
-        completed: !todo.completed
-      }
-    );
-  }
-};
 ```

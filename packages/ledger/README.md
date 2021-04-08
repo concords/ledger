@@ -38,7 +38,11 @@ const {
 
 #### Auth
 
-[Concords Identity](https://typedoc.concords.app/modules/identity_src.html)
+To ensure integrity in the ledger, Concords uses an ECDSA key-pair to sign and verify transactions added to the ledger. The Keys are generated in the users browser using the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API).
+
+[Docs](https://docs.concords.app/guide/identity.html)
+[TypeDoc](https://typedoc.concords.app/modules/identity_src.html)
+
 
 ### Plugins
 
