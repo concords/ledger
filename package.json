@@ -16,7 +16,7 @@
     "ledger:build": "yarn workspace @concords/ledger build",
     "ledger:publish": "yarn workspace @concords/ledger publish",
     "build": "yarn identity:build && yarn core:build && yarn ledger:build",
-    "typedoc:build": "typedoc"
+    "typedoc:build": "yarn build && typedoc"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
