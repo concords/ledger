@@ -1,23 +1,55 @@
 import { addRecord, createLedger, mine, hashData } from '@concords/core';
 import { exportIdentity, sign, importSigningKey } from '@concords/identity';
 import { ILedger } from '@concords/core/types';
-import { IIdentity } from '@concords/identity/types';
+import { IIdentity, IAuthKeys } from '@concords/identity/types';
 
-export interface IConfig {
-  plugins: Array<Object>,
-  identity: IIdentity,
-  secret: string,
-  ledger: ILedger,
+interface IConfig {
+  readonly plugins: Array<Object>,
+  readonly identity: IIdentity,
+  readonly secret: string,
+  readonly ledger: ILedger,
 }
 
-export interface ILedgerAPI {
-  auth: Function,
-  load: Function,
-  create: Function,
-  replay: Function,
-  commit: Function,
-  add: Function,
-  destroy: Function,
+interface IAuthFunc {
+  (IAuthKeys): Promise<void>;
+}
+
+interface ICreateFunc {
+  (
+    initialData?: Object,
+    difficulty?: number,
+  ): Promise<void>;
+}
+interface ILoadFunc {
+  (
+    ledger: ILedger,
+    shouldReplay?: boolean
+  ): Promise<void>;
+}
+interface IReplayFunc {
+  (
+    from?: string,
+    to?: string
+  ): Promise<void>;
+}
+interface ICommitFunc {
+  (): Promise<void>;
+}
+interface IAddFunc {
+  (data: Object): Promise<void>;
+}
+interface IDestroyFunc {
+  (data: Object): Promise<void>;
+}
+
+interface ILedgerAPI {
+  auth: IAuthFunc,
+  create: ICreateFunc,
+  load: ILoadFunc,
+  replay: IReplayFunc,
+  commit: ICommitFunc,
+  add: IAddFunc,
+  destroy: IDestroyFunc,
 }
 
 const availableHooks = [
@@ -124,11 +156,11 @@ export default (
 
     state.ledger = await addRecord(signedRecord, { ...state.ledger });
 
-    runHooks('onAdd', signedRecord);
-    runHooks('onUpdate', state);
+    await runHooks('onAdd', signedRecord);
+    await runHooks('onUpdate', state);
   }
 
-  async function replay({ from = null, to = null } = {}) {
+  async function replay(from, to) {
     if (!state.ledger) {
       console.warn('Cannot replay: ledger not loaded');
       return;
