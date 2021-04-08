@@ -1,4 +1,4 @@
-# A persistent & tamper-proof Javascript data-ledger.
+# A tamper-proof Javascript data-ledger.
 
 > ## concord
 > /ˈkɒŋkɔːd/
