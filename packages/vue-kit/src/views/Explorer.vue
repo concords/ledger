@@ -6,7 +6,9 @@
       </h1>
     </div>
     <div class="overflow-x-scroll">
-      <table class="min-w-full divide-y divide-gray-200">
+      <table
+        v-if="filteredList.length"
+        class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             <th
@@ -41,6 +43,12 @@
           </tr>
         </tbody>
       </table>
+      <div
+        v-else
+        class="text-center py-10 text-6xl font-medium text-gray-400"
+      >
+        No data to show
+      </div>
     </div>
   </div>
 </template>

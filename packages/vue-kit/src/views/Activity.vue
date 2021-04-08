@@ -13,7 +13,7 @@
         <ul class="flex flex-col m-auto">
           <div
             v-if="!pendingRecords.length"
-            class="text-3xl text-center text-gray-400"
+            class="text-3xl text-center text-gray-400 my-6"
           >
             No pending records
           </div>
@@ -40,9 +40,9 @@
         <ul>
           <div
             v-if="!records.length"
-            class="text-3xl text-center text-gray-400"
+            class="text-3xl text-center text-gray-400 my-6"
           >
-            No records
+            No confirmed records
           </div>
           <li
             v-for="item in records"
