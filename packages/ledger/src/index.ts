@@ -1,46 +1,46 @@
 import { addRecord, createLedger, mine, hashData, ILedger } from '@concords/core';
 import { exportIdentity, sign, importSigningKey, IIdentity, IAuthKeys } from '@concords/identity';
 
-interface IConfig {
+export interface IConfig {
   plugins: Array<Object>,
   identity: IIdentity,
   secret: string,
   ledger: ILedger,
 }
 
-interface IAuthFunc {
+export interface IAuthFunc {
   (IAuthKeys): Promise<void>;
 }
 
-interface ICreateFunc {
+export interface ICreateFunc {
   (
     initialData?: Object,
     difficulty?: number,
   ): Promise<void>;
 }
-interface ILoadFunc {
+export interface ILoadFunc {
   (
     ledger: ILedger,
     shouldReplay?: boolean
   ): Promise<void>;
 }
-interface IReplayFunc {
+export interface IReplayFunc {
   (
     from?: string,
     to?: string
   ): Promise<void>;
 }
-interface ICommitFunc {
+export interface ICommitFunc {
   (): Promise<void>;
 }
-interface IAddFunc {
+export interface IAddFunc {
   (data: Object): Promise<void>;
 }
-interface IDestroyFunc {
+export interface IDestroyFunc {
   (data: Object): Promise<void>;
 }
 
-interface ILedgerAPI {
+export interface ILedgerAPI {
   auth: IAuthFunc,
   create: ICreateFunc,
   load: ILoadFunc,

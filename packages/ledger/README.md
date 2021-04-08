@@ -6,7 +6,8 @@
 > agreement or harmony between people or groups.
 
 
-Try the demo 👉 https://demo.concords.app
+Demo App 👉 https://demo.concords.app
+TypeDocs 👉 https://typedoc.concords.app
 
 ----
 
@@ -31,11 +32,13 @@ const {
   replay,
   commit,
   add,
+  destroy,
 } = ledger();
-
-create();
-auth(identity);
 ```
+
+#### Auth
+
+[Concords Identity](https://typedoc.concords.app/modules/identity_src.html)
 
 ### Plugins
 
