@@ -1,4 +1,4 @@
-# An immutable Javascript data-ledger.
+# A persistent & tamper-proof Javascript data-ledger.
 
 > ## concord
 > /ˈkɒŋkɔːd/
@@ -27,11 +27,11 @@ import ledger from '@concords/ledger';
 const {
   auth,
   load,
-  create(),
+  create,
   replay,
   commit,
   add,
-} = ledger({});
+} = ledger();
 
 create();
 auth(identity);

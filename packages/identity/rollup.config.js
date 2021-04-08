@@ -13,6 +13,9 @@ export default [
       }),
       typescript(),
       babel({
+        presets: [
+          "@babel/preset-flow"
+        ],
         runtimeHelpers: true,
         extensions: ['.js', '.ts']
       })

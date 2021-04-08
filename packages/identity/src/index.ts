@@ -1,14 +1,14 @@
-export interface Identity {
+export interface IIdentity {
   x: string,
   y: string,
 }
-export interface AuthKeys {
+export interface IAuthKeys {
   secret: string,
-  identity: Identity,
+  identity: IIdentity,
 };
 
 /**
- * Create Signing Key pair
+ * Create a new Identity key-pair
  *
  * ```typescript
  * const {
@@ -17,7 +17,7 @@ export interface AuthKeys {
  * } = await createIdentity();
  * ```
  */
-export const createIdentity = async (): Promise<AuthKeys> => {
+export const createIdentity = async (): Promise<IAuthKeys> => {
   const { publicKey, privateKey} = await crypto.subtle.generateKey(
     { name: "ECDSA", namedCurve: "P-384" },
     true,
@@ -44,12 +44,12 @@ export const createIdentity = async (): Promise<AuthKeys> => {
  * ```
  */
 export const importSigningKey = (
-  identity: Identity,
+  identity: IIdentity,
   secret: string
 ): Promise<CryptoKey> => {
   
   if (!identity || !secret) {
-      return;
+    return;
   }
 
   return crypto.subtle.importKey(
@@ -72,12 +72,14 @@ export const importSigningKey = (
  * Export Identity
  *
  * ```typescript
- * const signingKey: CryptoKey = await importSigningKey(identity, secret);
+ * const user: Identity = await exportIdentity(signingKey);
+ * 
+ * const uniquePublicIdentifier = `${user.x}${user.y}`;
  * ```
  */
 export const exportIdentity = async (
   signingKey: CryptoKey,
-): Promise<Identity> => {
+): Promise<IIdentity> => {
   const publicSigningKey: JsonWebKey
     = await crypto.subtle.exportKey('jwk', signingKey) as JsonWebKey;
 
@@ -99,14 +101,14 @@ export const sign = async (
   
   const dataBuffer = new TextEncoder().encode(JSON.stringify(data));
   const signatureBuffer = await crypto.subtle.sign(
-      {
-          name: "ECDSA",
-          hash: {
-              name: "SHA-384"
-          },
+    {
+      name: "ECDSA",
+      hash: {
+        name: "SHA-384"
       },
-      signingKey,
-      dataBuffer,
+    },
+    signingKey,
+    dataBuffer,
   );
   
   const u8 = new Uint8Array(signatureBuffer);
@@ -122,20 +124,21 @@ export const sign = async (
  * ```
  */
 export const verifySignature = async (
-    identity: Identity,
-    signature: string,
-    data: Object
-  ): Promise<Boolean> => {
+  identity: IIdentity,
+  signature: string,
+  data: Object
+): Promise<Boolean> => {
   const key = await crypto.subtle.importKey(
     'jwk',
     {
       crv: "P-384",
       ext: true,
       kty: "EC",
-      ...identity },
+      ...identity
+    },
     {
-        name: 'ECDSA',
-        namedCurve: "P-384",
+      name: 'ECDSA',
+      namedCurve: "P-384",
     },
     true,
     ["sign"],
@@ -146,8 +149,8 @@ export const verifySignature = async (
 
   return crypto.subtle.verify(
     {
-        name: "ECDSA",
-        hash: {name: "SHA-384"},
+      name: "ECDSA",
+      hash: { name: "SHA-384" },
     },
     key,
     u8signature,

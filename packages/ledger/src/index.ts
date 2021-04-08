@@ -1,5 +1,24 @@
-import { add_transaction, create as createChain, hash_data, mine } from '@concords/core';
+import { addRecord, createLedger, mine, hashData } from '@concords/core';
 import { exportIdentity, sign, importSigningKey } from '@concords/identity';
+import { ILedger } from '@concords/core/types';
+import { IIdentity } from '@concords/identity/types';
+
+export interface IConfig {
+  plugins: Array<Object>,
+  identity: IIdentity,
+  secret: string,
+  ledger: ILedger,
+}
+
+export interface ILedgerAPI {
+  auth: Function,
+  load: Function,
+  create: Function,
+  replay: Function,
+  commit: Function,
+  add: Function,
+  destroy: Function,
+}
 
 const availableHooks = [
   'onAuth',
@@ -13,12 +32,14 @@ const availableHooks = [
   'onDestroy'
 ];
 
-export default (config = {
-  plugins: [],
-  identity: null,
-  secret: null,
-  ledger: null,
-}) => {
+export default (
+  config: IConfig = {
+    plugins: [],
+    identity: null,
+    secret: null,
+    ledger: null,
+  }
+): ILedgerAPI => {
 
   let hooks = {};
 
@@ -53,10 +74,13 @@ export default (config = {
     await runHooks('onAuth', identity);
   }
 
-  async function create(difficulty = 1) {
-    state.ledger = await createChain({}, difficulty);
+  async function create(
+    initialData?: Object,
+    difficulty: number = 1
+  ) {
+    state.ledger = await createLedger(initialData, difficulty);
     await runHooks('onLoad', state);
-    runHooks('onReady', state);
+    await runHooks('onReady', state);
   }
   
   async function load(ledger, shouldReplay = true) {
@@ -65,30 +89,30 @@ export default (config = {
     if (shouldReplay) {
       await replay();
     }
-    runHooks('onReady', state);
+    await runHooks('onReady', state);
   }
 
-  const add = async (transaction) => {
+  const add = async (data) => {
     if (!state.signingKey) {
-      console.warn('Cannot add transaction: signingKey not verified');
+      console.warn('Cannot add record: signingKey not verified');
       return;
     }
     
     if (!state.ledger) {
-      console.warn('Cannot add transaction: ledger not loaded');
+      console.warn('Cannot add record: ledger not loaded');
       return;
     }
 
     const identity = await exportIdentity(state.signingKey);
 
     const timestamp = Date.now();
-    const id = await hash_data(`${JSON.stringify(identity)}_${timestamp}`);
+    const id = await hashData(`${JSON.stringify(identity)}_${timestamp}`);
     
     const record = {
-      data: transaction,
+      data,
       id,
       timestamp,
-      user: identity,
+      identity,
     }
 
     const signature = await sign(state.signingKey, record);
@@ -98,7 +122,7 @@ export default (config = {
       ...record
     };
 
-    state.ledger = await add_transaction(signedRecord, { ...state.ledger });
+    state.ledger = await addRecord(signedRecord, { ...state.ledger });
 
     runHooks('onAdd', signedRecord);
     runHooks('onUpdate', state);
@@ -110,38 +134,38 @@ export default (config = {
       return;
     }
 
-    const { chain, pending_transactions } = state.ledger;
-    const transactions = [
-        ...chain.reduce((acc, block) => ([ ...acc, ...block.transactions ]), []),
-        ...pending_transactions,
+    const { chain, pending_records } = state.ledger;
+    const records = [
+        ...chain.reduce((acc, block) => ([ ...acc, ...block.records ]), []),
+        ...pending_records,
     ].sort((a, b) => a.timestamp - b.timestamp);
 
     let i = from ? 
-      transactions.findIndex(({ id }) => id === from) :
+      records.findIndex(({ id }) => id === from) :
       0;
 
     const len = to ? 
-      transactions.findIndex(({ id }) => id === to) + 1 :
-      transactions.length;  
+      records.findIndex(({ id }) => id === to) + 1 :
+      records.length;  
 
     if (i < 0) {
       console.warn(`Cannot replay: transaction ${from} not found`);
       return;
     }
     for (; i < len; i++) {
-      await runHooks('onAdd', transactions[i]);
+      await runHooks('onAdd', records[i]);
     }
-    runHooks('onReplay', { from, to, ...state });
+    await runHooks('onReplay', { from, to, ...state });
   }
 
-  function destroy() {
-    runHooks('onDestroy', state);
+  async function destroy() {
+    await runHooks('onDestroy', state);
   }
 
   async function commit() {
     state.ledger = await mine(state.ledger);
-    runHooks('onCommit', state);
-    runHooks('onUpdate', state);
+    await runHooks('onCommit', state);
+    await runHooks('onUpdate', state);
   }
 
   if (config.secret && config.identity) {

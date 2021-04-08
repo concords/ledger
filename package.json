@@ -7,19 +7,20 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach run build",
-    "versions": "yarn workspaces foreach run version",
-    "dev:plugins": "yarn workspace @concords/plugins dev",
-    "dev:vue-kit": "yarn workspace @concords/vue-kit dev",
-    "build:plugins": "yarn workspace @concords/plugins build",
-    "build:vue-kit": "yarn workspace @concords/vue-kit build",
-    "build:ledger": "yarn workspace @concords/ledger build",
-    "publish:ledger": "yarn workspace @concords/ledger publish",
-    "pre-publish": "build",
-    "publish": "yarn workspaces foreach run publish"
+    "identity:dev": "yarn workspace @concords/identity dev",
+    "identity:build": "yarn workspace @concords/identity build",
+    "core:dev": "yarn workspace @concords/core dev",
+    "core:build": "yarn workspace @concords/core build",
+    "vue-kit:dev": "yarn workspace @concords/vue-kit dev",
+    "vue-kit:build": "yarn workspace @concords/vue-kit build",
+    "ledger:build": "yarn workspace @concords/ledger build",
+    "ledger:publish": "yarn workspace @concords/ledger publish",
+    "build": "yarn identity:build && yarn core:build && yarn ledger:build"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
+    "@babel/plugin-syntax-flow": "^7.12.13",
+    "@babel/preset-flow": "^7.13.13",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
     "@commitlint/config-lerna-scopes": "^12.1.1",

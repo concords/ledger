@@ -13,6 +13,9 @@ export default [
       }),
       typescript(),
       babel({
+        presets: [
+          "@babel/preset-flow"
+        ],
         runtimeHelpers: true,
         extensions: ['.js', '.ts']
       })
@@ -20,6 +23,7 @@ export default [
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
+      { file: 'dist/build/concords-core.js', format: 'iife', name: "Core" }
     ]
   }
 ]
