@@ -15,7 +15,6 @@
     "vue-kit:build": "yarn workspace @concords/vue-kit build",
     "ledger:build": "yarn workspace @concords/ledger build",
     "ledger:release": "yarn workspace @concords/ledger semantic-release",
-    "ledger:publish": "yarn workspace @concords/ledger publish",
     "build": "yarn identity:build && yarn core:build && yarn ledger:build",
     "test": "jest",
     "typedoc:build": "yarn build && typedoc"
