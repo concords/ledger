@@ -37,6 +37,6 @@ describe('Test Ledger', () => {
     await ledgerApi.create({ id: 'test' });
     expect(rawLedger.chain.length).toBe(1);
     expect(rawLedger.chain[0].records.length).toBe(1);
-    expect(rawLedger.chain[0].records[0].id).toBe('test');
+    expect(rawLedger.chain[0].records[0].data.id).toBe('test');
   });
 });
