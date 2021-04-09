@@ -143,12 +143,17 @@ function createBlock(
 
 
 async function createGenesisBlock(
-  data?: Object
+  record: IRecord
 ): Promise<IBlock> {
   const timestamp = Date.now();
-  const block = createBlock();
-  const hash = await hashData({ data, timestamp });
-
+  const hash = await hashData({ ...record, timestamp });
+  const block = createBlock([
+    {
+      ...record,
+      timestamp,
+      id: hash,
+    }
+  ]);
   return {
     ...block,
     hash,
@@ -173,10 +178,10 @@ export function consensus(
 }
 
 export async function createLedger(
-  data: Object,
+  record: IRecord,
   difficulty: number
 ): Promise<ILedger> {
-  const genesisBlock = await createGenesisBlock(data);
+  const genesisBlock = await createGenesisBlock(record);
 
   return {
     difficulty,

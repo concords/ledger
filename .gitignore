@@ -15,3 +15,4 @@ packages/*/types
 packages/*/dist
 
 docs
+coverage

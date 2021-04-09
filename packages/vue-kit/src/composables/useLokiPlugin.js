@@ -13,6 +13,11 @@ export default (db) => {
         db.removeCollection(ledger.id);
       },
       onAdd(record) {
+        // Bail if no data
+        if (!record.data) {
+          return;
+        }
+
         const item = collection.findOne({ id: record.data.id });
         if (item) {
           collection.update({ ...item, ...record.data });

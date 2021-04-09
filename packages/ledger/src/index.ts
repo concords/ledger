@@ -103,10 +103,27 @@ export default (
   }
 
   async function create(
-    initialData?: Object,
+    data?: Object,
     difficulty: number = 1
   ) {
-    state.ledger = await createLedger(initialData, difficulty);
+    const timestamp = Date.now();
+    const identity = await exportIdentity(state.signingKey);
+    const id = await hashData(`${JSON.stringify(identity)}_${timestamp}`);
+    
+    const record = {
+      data,
+      id,
+      timestamp,
+      identity,
+    }
+
+    const signature = await sign(state.signingKey, record);
+    
+    const signedRecord = {
+      signature,
+      ...record
+    };
+    state.ledger = await createLedger(signedRecord, difficulty);
     await runHooks('onLoad', state);
     await runHooks('onReady', state);
   }
@@ -198,12 +215,9 @@ export default (
 
   if (config.secret && config.identity) {
     auth(config);
-  }
-
-  if (config.ledger) {
-    load(config.ledger);
-  } else {
-    create();
+    if (config.ledger) {
+      load(config.ledger);
+    }
   }
   
   return {

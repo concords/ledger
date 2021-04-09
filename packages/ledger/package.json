@@ -13,7 +13,7 @@
     "blockchain",
     "decentralized"
   ],
-  "license": "GPL-3.0-or-later",
+  "license": "MIT",
   "main": "dist/concords-ledger.cjs.js",
   "module": "dist/concords-ledger.esm.js",
   "exports": {
