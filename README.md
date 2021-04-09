@@ -119,3 +119,5 @@ const { add, commit } = ledger({
   ]
 });
 ```
+
+## Contributing
