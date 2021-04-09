@@ -215,12 +215,9 @@ export default (
 
   if (config.secret && config.identity) {
     auth(config);
-  }
-
-  if (config.ledger) {
-    load(config.ledger);
-  } else {
-    create();
+    if (config.ledger) {
+      load(config.ledger);
+    }
   }
   
   return {

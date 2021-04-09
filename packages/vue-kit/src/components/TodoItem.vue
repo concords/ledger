@@ -1,5 +1,8 @@
 <template>
-  <div class="flex justify-between rounded bg-white p-4 my-2 shadow">
+  <div
+    v-if="item"
+    class="flex justify-between rounded bg-white p-4 my-2 shadow"
+  >
     <label>
       <input
         :checked="item.completed"
@@ -41,7 +44,7 @@ export default {
   props: {
     item: {
       type: Object,
-      required: true,
+      default: null,
     }
   },
   setup() {

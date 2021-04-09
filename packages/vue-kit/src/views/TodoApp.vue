@@ -64,12 +64,17 @@ export default defineComponent({
     const showCompletedFilter = ref(true);
 
     // Ledger
-    const { add, commit, auth, destroy, create } = ledger({
+    const { add, commit, auth, create } = ledger({
       ...props.user,
       ledger: props.ledger,
       plugins: [
         lokiPlugin,
         {
+          onAuth() {
+            if (!props.ledger) {
+              create();
+            }
+          },
           onReady: handleUpdates,
           onUpdate: handleUpdates,
         }
