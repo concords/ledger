@@ -130,7 +130,7 @@ async function addBlock(
 
 
 function createBlock(
-  records: Array<IRecord> = [],
+  records: Array<IRecord|any> = [],
   last_hash: string = '0'
 ): IBlock {
     return {
@@ -146,7 +146,7 @@ async function createGenesisBlock(
   data?: Object
 ): Promise<IBlock> {
   const timestamp = Date.now();
-  const block = createBlock();
+  const block = createBlock([data]);
   const hash = await hashData({ data, timestamp });
 
   return {
