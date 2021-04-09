@@ -24,6 +24,8 @@ jobs:
         run: yarn test
       - name: Publish Codecov
         uses: codecov/codecov-action@v1
+      - name: Log GITHUB_WORKSPACE
+        run: echo "GITHUB_WORKSPACE = $GITHUB_WORKSPACE"
       - name: Archive code coverage results
         uses: actions/upload-artifact@v2
         with:
