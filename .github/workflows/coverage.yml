@@ -4,18 +4,18 @@ on: [pull_request]
 
 jobs:
   build:
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - name: Install dependencies
-      run: yarn install --immutable
-    - name: Build library
-      run: yarn build
-    - name: Test library
-      run: yarn test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Build library
+        run: yarn build
+      - name: Test library
+        run: yarn test
