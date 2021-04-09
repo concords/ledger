@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - codecov
 jobs:
   release:
     name: Release
@@ -23,7 +23,7 @@ jobs:
       - name: Test library
         run: yarn test
       - name: Publish Codecov
-        run: yarn codecov --disable=gcov
+        uses: codecov/codecov-action@v1
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
