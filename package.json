@@ -14,6 +14,7 @@
     "vue-kit:dev": "yarn workspace @concords/vue-kit dev",
     "vue-kit:build": "yarn workspace @concords/vue-kit build",
     "ledger:build": "yarn workspace @concords/ledger build",
+    "ledger:release": "yarn workspace @concords/ledger semantic-release",
     "ledger:publish": "yarn workspace @concords/ledger publish",
     "build": "yarn identity:build && yarn core:build && yarn ledger:build",
     "typedoc:build": "yarn build && typedoc"
@@ -40,13 +41,11 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
+    "semantic-release": "^17.4.2",
     "tslib": "^2.1.0",
     "typedoc": "^0.20.35",
     "typescript": "^4.2.3",
     "vite": "^2.0.0-beta.12"
-  },
-  "dependencies": {
-    "dotenv": "^8.2.0"
   },
   "husky": {
     "hooks": {
