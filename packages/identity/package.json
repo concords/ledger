@@ -4,7 +4,7 @@
   "description": "ECDSA key-pair  utilities",
   "repository": "https://github.com/concords/core/packages/identity",
   "author": "dev@concords.app",
-  "license": "GPL-3.0-or-later",
+  "license": "MIT",
   "main": "dist/build/concords-identity.cjs.js",
   "module": "dist/build/concords-identity.esm.js",
   "types": "types",
