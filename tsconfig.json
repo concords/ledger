@@ -13,6 +13,7 @@
     "declaration": true,
     "importHelpers": true,
     "moduleResolution": "node",
+    "sourceMap": true,
   },
   "typedocOptions": {
     "entryPoints": [
