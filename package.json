@@ -59,7 +59,7 @@
   },
   "jest": {
     "setupFiles": [
-      "./private/jest/setup.js"
+      "./.jest/setup.js"
     ],
     "collectCoverage": true
   }
