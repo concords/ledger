@@ -23,7 +23,7 @@ jobs:
       - name: Test library
         run: yarn test
       - name: Publish Codecov
-        run: codecov
+        run: yarn codecov
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
