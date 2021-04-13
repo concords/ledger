@@ -1,6 +1,7 @@
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript';
+import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json'
 
 export default [
@@ -23,7 +24,8 @@ export default [
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
-      { file: 'dist/build/concords-identity.js', format: 'iife', name: "Identity" }
+      { file: 'dist/concords-identity.js', format: 'iife', name: "Identity" },
+      { file: 'dist/concords-identity.min.js', format: 'iife', name: 'Identity', plugins: [terser()] }
     ]
   }
 ]

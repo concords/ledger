@@ -5,8 +5,8 @@
   "repository": "https://github.com/concords/core/packages/identity",
   "author": "dev@concords.app",
   "license": "MIT",
-  "main": "dist/build/concords-identity.cjs.js",
-  "module": "dist/build/concords-identity.esm.js",
+  "main": "dist/concords-identity.cjs.js",
+  "module": "dist/concords-identity.esm.js",
   "types": "types",
   "files": [
     "/dist"
