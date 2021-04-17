@@ -14,7 +14,6 @@
     "release": "semantic-release",
     "version": "yarn workspaces foreach run standard-version",
     "publish": "yarn workspaces foreach run publish",
-    "prepublish": "npm config set //registry.npmjs.com/:_authToken=${NPM_TOKEN}",
     "typedoc:build": "yarn build && typedoc"
   },
   "devDependencies": {
