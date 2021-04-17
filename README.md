@@ -6,7 +6,7 @@
 > agreement or harmony between people or groups.
 
 ---
-
+[![Release](https://github.com/concords/ledger/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/concords/ledger/actions/workflows/release.yml)
 [![NPM](https://img.shields.io/npm/v/@concords/ledger)](https://www.npmjs.com/package/@concords/ledger)
 [![codecov](https://codecov.io/gh/concords/ledger/branch/main/graph/badge.svg?token=YGJMR1YSMA)](https://codecov.io/gh/concords/ledger)
 [![MIT](https://img.shields.io/github/license/concords/ledger)](https://github.com/concords/ledger/blob/main/COPYING)
