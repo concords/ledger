@@ -4,7 +4,7 @@
   "description": "A tamper-proof Javascript data-ledger",
   "repository": {
     "type": "git",
-    "url": "https://github.com/concords/ledger/packages/ledger"
+    "url": "https://github.com/concords/ledger"
   },
   "author": "dev@concords.app",
   "keywords": [
