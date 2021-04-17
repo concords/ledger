@@ -9,10 +9,7 @@
   "scripts": {
     "dev:identity": "yarn workspace @concords/identity dev",
     "dev:core": "yarn workspace @concords/core dev",
-    "build:identity": "yarn workspace @concords/identity build",
-    "build:core": "yarn workspace @concords/core build",
-    "build:ledger": "yarn workspace @concords/ledger build",
-    "build": "yarn build:identity && yarn build:core && yarn build:ledger",
+    "build": "yarn workspaces foreach run build",
     "test": "jest",
     "release": "semantic-release",
     "publish": "yarn workspaces foreach run publish",
