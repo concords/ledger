@@ -18,14 +18,24 @@ jobs:
           node-version: 12
       - name: Install dependencies
         run: yarn install --immutable
-      - name: Build library
+      - name: Build
         run: yarn build
-      - name: Test library
+      - name: Test
         run: yarn test
       - name: Publish Codecov
         run: yarn codecov --disable=gcov
-      - name: Release
+      - name: Release Identity
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release
+        run: yarn release:identity
+      - name: Release Core
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn release:core
+      - name: Release Ledger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn release: ledger

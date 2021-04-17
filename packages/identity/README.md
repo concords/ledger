@@ -1,0 +1,1 @@
+![Identity](../assets/brand/logos/identity)
