@@ -33,6 +33,6 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
     "dev": "rollup -c -w",
-    "publish": "standard-version && yarn npm publish --no-tag"
+    "publish": "standard-version --skip.commit --skip.tag && yarn npm publish"
   }
 }
