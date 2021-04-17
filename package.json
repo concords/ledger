@@ -7,8 +7,6 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:identity": "yarn workspace @concords/identity dev",
-    "dev:core": "yarn workspace @concords/core dev",
     "build": "yarn workspaces foreach run build",
     "test": "jest",
     "release": "semantic-release",

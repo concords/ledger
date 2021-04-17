@@ -20,6 +20,6 @@
   "scripts": {
     "dev": "rollup -c --w",
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
-    "publish": "standard-version && git push --follow-tags origin main && yarn npm publish"
+    "publish": "standard-version && yarn npm publish"
   }
 }

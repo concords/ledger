@@ -37,7 +37,7 @@ jobs:
       - name: Version
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn version
+        run: yarn publish
       - name: Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
