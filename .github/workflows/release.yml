@@ -22,9 +22,11 @@ jobs:
         run: yarn build
       - name: Test
         run: yarn test
-      - name: Publish Codecov
-        run: yarn codecov --disable=gcov
+      - name: Codecov
+        run: yarn codecov
       - name: Version
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn version
       - name: Publish
         env:
