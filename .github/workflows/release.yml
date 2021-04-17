@@ -7,6 +7,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,8 +21,6 @@ jobs:
         with:
           node-version: 12
       - name: Install dependencies
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn install --immutable
       - name: Build
         run: yarn build
@@ -31,6 +31,4 @@ jobs:
       - name: Version
         run: yarn version
       - name: Publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn prepublish && yarn publish
