@@ -17,7 +17,7 @@
     "release:ledger": "yarn workspace @concords/ledger semantic-release",
     "build": "yarn build:identity && yarn build:core && yarn build:ledger",
     "test": "jest",
-    "release": "yarn release:identity && yarn release:core && yarn release:ledger",
+    "release": "semantic-release && yarn workspaces foreach run publish",
     "typedoc:build": "yarn build && typedoc"
   },
   "devDependencies": {
