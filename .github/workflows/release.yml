@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - semantic-release
 jobs:
   release:
     name: Release
@@ -24,18 +24,8 @@ jobs:
         run: yarn test
       - name: Publish Codecov
         run: yarn codecov --disable=gcov
-      - name: Release Identity
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release:identity
-      - name: Release Core
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release:core
-      - name: Release Ledger
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release:ledger
+        run: yarn release
