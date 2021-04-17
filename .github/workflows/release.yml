@@ -34,7 +34,13 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn codecov
-      - name: Version & Publish
+      - name: Version
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn version
+      - name: Release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: semantic-release

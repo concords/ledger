@@ -12,7 +12,6 @@
     "build": "yarn workspaces foreach run build",
     "test": "jest",
     "release": "semantic-release",
-    "version": "yarn workspaces foreach run standard-version",
     "publish": "yarn workspaces foreach run publish",
     "typedoc:build": "yarn build && typedoc"
   },
