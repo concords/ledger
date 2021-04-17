@@ -77,7 +77,7 @@ var Identity = (function (exports) {
       };
     });
     /**
-     * Import Signing Key
+     * Import Signing Key from public key
      *
      * ```typescript
      * const signingKey: CryptoKey = await importSigningKey(identity, secret);
@@ -101,7 +101,7 @@ var Identity = (function (exports) {
       }, true, ["sign"]);
     };
     /**
-     * Export Identity
+     * Export Identity from signing key
      *
      * ```typescript
      * const user: Identity = await exportIdentity(signingKey);
@@ -118,7 +118,7 @@ var Identity = (function (exports) {
       };
     });
     /**
-     * Sign
+     * Sign JSON object with signing key
      *
      * ```typescript
      * const signature: string = await sign(signingKey, data);
@@ -137,7 +137,7 @@ var Identity = (function (exports) {
       return btoa(String.fromCharCode.apply(null, u8));
     });
     /**
-     * Verify signature
+     * Verify signature on JSON object
      *
      * ```typescript
      * const isSignatureValid: Boolean = await verifySignature(identity, signature, data);

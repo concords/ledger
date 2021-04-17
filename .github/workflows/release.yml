@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - semantic-release
 jobs:
   release:
     name: Release
@@ -12,30 +12,33 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Setup Git User
+        uses: fregante/setup-git-user@v1
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 12
       - name: Install dependencies
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn install --immutable
       - name: Build
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn build
       - name: Test
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn test
-      - name: Publish Codecov
-        run: yarn codecov --disable=gcov
-      - name: Release Identity
+      - name: Codecov
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release:identity
-      - name: Release Core
+        run: yarn codecov
+      - name: Version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release:core
-      - name: Release Ledger
+        run: yarn version
+      - name: Publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release:ledger
+        run: yarn publish

@@ -1,6 +1,6 @@
 {
   "name": "@concords/identity",
-  "version": "1.1.0",
+  "version": "1.8.2",
   "description": "ECDSA key-pair  utilities",
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "scripts": {
     "dev": "rollup -c --w",
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
-    "semantic-release": "semantic-release"
+    "publish": "yarn npm publish --access public",
+    "standard-version": "standard-version"
   }
 }

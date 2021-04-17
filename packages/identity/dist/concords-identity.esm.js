@@ -74,7 +74,7 @@ const createIdentity = () => __awaiter(void 0, void 0, void 0, function* () {
   };
 });
 /**
- * Import Signing Key
+ * Import Signing Key from public key
  *
  * ```typescript
  * const signingKey: CryptoKey = await importSigningKey(identity, secret);
@@ -98,7 +98,7 @@ const importSigningKey = (identity, secret) => {
   }, true, ["sign"]);
 };
 /**
- * Export Identity
+ * Export Identity from signing key
  *
  * ```typescript
  * const user: Identity = await exportIdentity(signingKey);
@@ -115,7 +115,7 @@ const exportIdentity = signingKey => __awaiter(void 0, void 0, void 0, function*
   };
 });
 /**
- * Sign
+ * Sign JSON object with signing key
  *
  * ```typescript
  * const signature: string = await sign(signingKey, data);
@@ -134,7 +134,7 @@ const sign = (signingKey, data) => __awaiter(void 0, void 0, void 0, function* (
   return btoa(String.fromCharCode.apply(null, u8));
 });
 /**
- * Verify signature
+ * Verify signature on JSON object
  *
  * ```typescript
  * const isSignatureValid: Boolean = await verifySignature(identity, signature, data);
