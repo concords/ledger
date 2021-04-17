@@ -7,17 +7,17 @@
     "packages/*"
   ],
   "scripts": {
-    "identity:dev": "yarn workspace @concords/identity dev",
-    "identity:build": "yarn workspace @concords/identity build",
-    "identity:release": "yarn workspace @concords/core semantic-release",
-    "core:dev": "yarn workspace @concords/core dev",
-    "core:build": "yarn workspace @concords/core build",
-    "core:release": "yarn workspace @concords/core semantic-release",
-    "ledger:build": "yarn workspace @concords/ledger build",
-    "ledger:release": "yarn workspace @concords/ledger semantic-release",
-    "build": "yarn identity:build && yarn core:build && yarn ledger:build",
+    "dev:identity": "yarn workspace @concords/identity dev",
+    "dev:core": "yarn workspace @concords/core dev",
+    "build:identity": "yarn workspace @concords/identity build",
+    "build:core": "yarn workspace @concords/core build",
+    "build:ledger": "yarn workspace @concords/ledger build",
+    "release:identity": "yarn workspace @concords/core semantic-release",
+    "release:core": "yarn workspace @concords/core semantic-release",
+    "release:ledger": "yarn workspace @concords/ledger semantic-release",
+    "build": "yarn build:identity && yarn build:core && yarn build:ledger",
     "test": "jest",
-    "release": "yarn identity:release && yarn core:release && yarn ledger:release",
+    "release": "yarn release:identity && yarn release:core && yarn release:ledger",
     "typedoc:build": "yarn build && typedoc"
   },
   "devDependencies": {
