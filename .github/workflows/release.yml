@@ -12,6 +12,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Setup Git User
+        uses: fregante/setup-git-user@v1
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
@@ -25,7 +27,6 @@ jobs:
       - name: Codecov
         run: yarn codecov
       - name: Version
-        uses: fregante/setup-git-user@v1
         run: yarn version
       - name: Publish
         env:
