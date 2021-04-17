@@ -1,6 +1,6 @@
 {
   "name": "@concords/identity",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "ECDSA key-pair  utilities",
   "repository": {
     "type": "git",

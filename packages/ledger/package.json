@@ -1,6 +1,6 @@
 {
   "name": "@concords/ledger",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A tamper-proof Javascript data-ledger",
   "repository": {
     "type": "git",
@@ -33,6 +33,6 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && rollup -c --environment INCLUDE_DEPS,BUILD:production",
     "dev": "rollup -c -w",
-    "publish": "standard-version && yarn npm publish"
+    "publish": "standard-version && yarn npm publish --no-tag"
   }
 }
