@@ -2,7 +2,7 @@
   "name": "@concords/core",
   "version": "1.3.0",
   "description": "An immutable Javascript data ledger",
-  "repository": "git://github.com/concords/core/packages/core",
+  "repository": "git://github.com/concords/ledger/packages/core",
   "main": "dist/concords-core.cjs.js",
   "module": "dist/concords-core.esm.js",
   "types": "types",
