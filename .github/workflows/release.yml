@@ -34,11 +34,7 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn codecov
-      - name: Version
+      - name: Version & Publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn version
-      - name: Publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn publish
