@@ -1,5 +1,4 @@
 import { hashData } from './utils';
-import { IIdentity } from '@concords/identity/types';
 
 export * from './utils';
 
@@ -7,7 +6,7 @@ export interface IRecord {
   id: string,
   timestamp: number;
   signature: string,
-  identity: IIdentity,
+  identity: { x: string, y: string },
   data?: Object,
 };
 
