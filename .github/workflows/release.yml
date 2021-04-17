@@ -24,10 +24,8 @@ jobs:
         run: yarn test
       - name: Publish Codecov
         run: yarn codecov --disable=gcov
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn release
+      - name: Version
+        run: yarn version
       - name: Publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

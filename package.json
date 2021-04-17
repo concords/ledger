@@ -12,6 +12,7 @@
     "build": "yarn workspaces foreach run build",
     "test": "jest",
     "release": "semantic-release",
+    "version": "yarn workspaces foreach run standard-version",
     "publish": "yarn workspaces foreach run publish",
     "typedoc:build": "yarn build && typedoc"
   },
@@ -44,6 +45,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "semantic-release": "^17.4.2",
+    "standard-version": "^9.2.0",
     "tslib": "^2.1.0",
     "typedoc": "^0.20.35",
     "typescript": "^4.2.3"
