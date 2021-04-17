@@ -37,7 +37,7 @@ export const createIdentity = async (): Promise<IAuthKeys> => {
 }
 
 /**
- * Import Signing Key
+ * Import Signing Key from public key
  *
  * ```typescript
  * const signingKey: CryptoKey = await importSigningKey(identity, secret);
@@ -69,7 +69,7 @@ export const importSigningKey = (
 }
 
 /**
- * Export Identity
+ * Export Identity from signing key
  *
  * ```typescript
  * const user: Identity = await exportIdentity(signingKey);
@@ -88,7 +88,7 @@ export const exportIdentity = async (
 
 
 /**
- * Sign
+ * Sign JSON object with signing key
  *
  * ```typescript
  * const signature: string = await sign(signingKey, data);
@@ -117,7 +117,7 @@ export const sign = async (
 
 
 /**
- * Verify signature
+ * Verify signature on JSON object
  *
  * ```typescript
  * const isSignatureValid: Boolean = await verifySignature(identity, signature, data);
