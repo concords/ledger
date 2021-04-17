@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/concords/ledger"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "dev@concords.app",
   "keywords": [
     "javascript",
