@@ -12,7 +12,7 @@
     "build:identity": "yarn workspace @concords/identity build",
     "build:core": "yarn workspace @concords/core build",
     "build:ledger": "yarn workspace @concords/ledger build",
-    "release:identity": "yarn workspace @concords/core semantic-release",
+    "release:identity": "yarn workspace @concords/identity semantic-release",
     "release:core": "yarn workspace @concords/core semantic-release",
     "release:ledger": "yarn workspace @concords/ledger semantic-release",
     "build": "yarn build:identity && yarn build:core && yarn build:ledger",
