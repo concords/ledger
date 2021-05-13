@@ -1,3 +1,5 @@
+import { b64encode, b64decode, spkiToPEM } from './utils';
+
 export interface IIdentity {
   x: string,
   y: string,
@@ -17,9 +19,9 @@ export interface IAuthKeys {
  * } = await createIdentity();
  * ```
  */
-export const createIdentity = async (): Promise<IAuthKeys> => {
+export const generate = async (): Promise<IAuthKeys> => {
   const { publicKey, privateKey} = await crypto.subtle.generateKey(
-    { name: "ECDSA", namedCurve: "P-384" },
+    { name: "ECDSA", namedCurve: "P-256" },
     true,
     ["sign", "verify"]
   );
@@ -55,16 +57,47 @@ export const importSigningKey = (
   return crypto.subtle.importKey(
     'jwk',
     {
-      crv: "P-384",
+      crv: "P-256",
       ext: true,
       kty: "EC",
       ...identity, d: secret },
     {
         name: 'ECDSA',
-        namedCurve: "P-384",
+        namedCurve: "P-256",
     },
     true,
     ["sign"],
+  );
+}
+/**
+ * Import Signing Key from public key
+ *
+ * ```typescript
+ * const signingKey: CryptoKey = await importSigningKey(identity, secret);
+ * ```
+ */
+export const importPublicKey = (
+  identity: IIdentity,
+): Promise<CryptoKey> => {
+  
+  if (!identity) {
+    return;
+  }
+
+  return crypto.subtle.importKey(
+    'jwk',
+    {
+      crv: "P-256",
+      ext: true,
+      kty: "EC",
+      ...identity
+    },
+    {
+      name: 'ECDSA',
+      namedCurve: "P-256",
+    },
+    true,
+    ["verify"],
   );
 }
 
@@ -77,9 +110,9 @@ export const importSigningKey = (
  * const uniquePublicIdentifier = `${user.x}${user.y}`;
  * ```
  */
-export const exportIdentity = async (
+export async function exportSigningKey(
   signingKey: CryptoKey,
-): Promise<IIdentity> => {
+): Promise<IIdentity> {
   const publicSigningKey: JsonWebKey
     = await crypto.subtle.exportKey('jwk', signingKey) as JsonWebKey;
 
@@ -88,31 +121,57 @@ export const exportIdentity = async (
 
 
 /**
- * Sign JSON object with signing key
+ * Export public key as der
  *
  * ```typescript
- * const signature: string = await sign(signingKey, data);
+ * const b64der: string = await exportPublicKeyAsDer(publicKey);
  * ```
  */
+ export async function exportPublicKey(key) {
+  const exported = await window.crypto.subtle.exportKey(
+    "spki",
+    key
+  );
+  return b64encode(exported);
+}
+
+/**
+ * Export public key as der
+ *
+ * ```typescript
+ * const b64der: string = await exportPublicKeyAsDer(publicKey);
+ * ```
+ */
+export async function publicKeyFromDer(key) {
+  const exported = await window.crypto.subtle.exportKey(
+    "spki",
+    key
+  );
+  return spkiToPEM(exported);
+}
+
+
+
+
 export const sign = async (
-  signingKey: CryptoKey,
+  identity: IIdentity,
+  secret: string,
   data: Object
 ) : Promise<string> => {
-  
-  const dataBuffer = new TextEncoder().encode(JSON.stringify(data));
+  const signingKey = await importSigningKey(identity, secret);
+  const dataBuffer = new TextEncoder().encode(JSON.stringify(data))
   const signatureBuffer = await crypto.subtle.sign(
     {
       name: "ECDSA",
       hash: {
-        name: "SHA-384"
+        name: "SHA-256"
       },
     },
     signingKey,
     dataBuffer,
   );
   
-  const u8 = new Uint8Array(signatureBuffer);
-  return btoa(String.fromCharCode.apply(null, u8));
+  return b64encode(signatureBuffer);
 };
 
 
@@ -123,37 +182,22 @@ export const sign = async (
  * const isSignatureValid: Boolean = await verifySignature(identity, signature, data);
  * ```
  */
-export const verifySignature = async (
+export const verify = async (
   identity: IIdentity,
   signature: string,
   data: Object
 ): Promise<Boolean> => {
-  const key = await crypto.subtle.importKey(
-    'jwk',
-    {
-      crv: "P-384",
-      ext: true,
-      kty: "EC",
-      ...identity
-    },
-    {
-      name: 'ECDSA',
-      namedCurve: "P-384",
-    },
-    true,
-    ["sign"],
-  );
-
-  const u8data = new TextEncoder().encode(JSON.stringify(data));
-  const u8signature = new Uint8Array(atob(signature).split('').map((c) => c.charCodeAt(0)));
+  const key = await importPublicKey(identity);
+  const dataBuffer = new TextEncoder().encode(JSON.stringify(data));
 
   return crypto.subtle.verify(
     {
       name: "ECDSA",
-      hash: { name: "SHA-384" },
+      hash: { name: "SHA-256" },
     },
     key,
-    u8signature,
-    u8data,
+    b64decode(signature),
+    dataBuffer,
   );
 }
+
