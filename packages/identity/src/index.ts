@@ -105,7 +105,7 @@ export const importPublicKey = (
  * Export Identity from signing key
  *
  * ```typescript
- * const user: Identity = await exportIdentity(signingKey);
+ * const user: Identity = await exportSigningKey(signingKey);
  * 
  * const uniquePublicIdentifier = `${user.x}${user.y}`;
  * ```

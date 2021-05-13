@@ -1,5 +1,5 @@
 import { addRecord, createLedger, mine, hashData, ILedger } from '@concords/core';
-import { exportIdentity, sign, importSigningKey, IIdentity, IAuthKeys } from '@concords/identity';
+import { exportSigningKey, sign, importSigningKey, IIdentity, IAuthKeys } from '@concords/identity';
 
 export interface IConfig {
   plugins: Array<Object>,
@@ -107,7 +107,7 @@ export default (
     difficulty: number = 1
   ) {
     const timestamp = Date.now();
-    const identity = await exportIdentity(state.signingKey);
+    const identity = await exportSigningKey(state.signingKey);
     const id = await hashData(`${JSON.stringify(identity)}_${timestamp}`);
     
     const record = {
@@ -148,7 +148,7 @@ export default (
       return;
     }
 
-    const identity = await exportIdentity(state.signingKey);
+    const identity = await exportSigningKey(state.signingKey);
 
     const timestamp = Date.now();
     const id = await hashData(`${JSON.stringify(identity)}_${timestamp}`);
