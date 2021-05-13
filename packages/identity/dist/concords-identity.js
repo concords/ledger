@@ -47,49 +47,6 @@ var Identity = (function (exports) {
       });
     }
 
-    function b64encode(buf) {
-      return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
-    }
-    function b64decode(str) {
-      var binary_string = window.atob(str);
-      var len = binary_string.length;
-      var bytes = new Uint8Array(new ArrayBuffer(len));
-
-      for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-      }
-
-      return bytes;
-    }
-    function spkiToPEM(key) {
-      var keydataS = arrayBufferToString(key);
-      var keydataB64 = window.btoa(keydataS);
-      var keydataB64Pem = formatAsPem(keydataB64);
-      return keydataB64Pem;
-    }
-    function arrayBufferToString(buffer) {
-      var binary = '';
-      var bytes = new Uint8Array(buffer);
-      var len = bytes.byteLength;
-
-      for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-
-      return binary;
-    }
-    function formatAsPem(str) {
-      var finalString = '-----BEGIN PUBLIC KEY-----\n';
-
-      while (str.length > 0) {
-        finalString += str.substring(0, 64) + '\n';
-        str = str.substring(64);
-      }
-
-      finalString = finalString + "-----END PUBLIC KEY-----";
-      return finalString;
-    }
-
     /**
      * Create a new Identity key-pair
      *
@@ -101,7 +58,7 @@ var Identity = (function (exports) {
      * ```
      */
 
-    const generate = () => __awaiter(void 0, void 0, void 0, function* () {
+    const createIdentity = () => __awaiter(void 0, void 0, void 0, function* () {
       const {
         publicKey,
         privateKey
@@ -144,76 +101,31 @@ var Identity = (function (exports) {
       }, true, ["sign"]);
     };
     /**
-     * Import Signing Key from public key
-     *
-     * ```typescript
-     * const signingKey: CryptoKey = await importSigningKey(identity, secret);
-     * ```
-     */
-
-    const importPublicKey = identity => {
-      if (!identity) {
-        return;
-      }
-
-      return crypto.subtle.importKey('jwk', Object.assign({
-        crv: "P-256",
-        ext: true,
-        kty: "EC"
-      }, identity), {
-        name: 'ECDSA',
-        namedCurve: "P-256"
-      }, true, ["verify"]);
-    };
-    /**
      * Export Identity from signing key
      *
      * ```typescript
-     * const user: Identity = await exportSigningKey(signingKey);
+     * const user: Identity = await exportIdentity(signingKey);
      *
      * const uniquePublicIdentifier = `${user.x}${user.y}`;
      * ```
      */
 
-    function exportSigningKey(signingKey) {
-      return __awaiter(this, void 0, void 0, function* () {
-        const publicSigningKey = yield crypto.subtle.exportKey('jwk', signingKey);
-        return {
-          x: publicSigningKey.x,
-          y: publicSigningKey.y
-        };
-      });
-    }
+    const exportIdentity = signingKey => __awaiter(void 0, void 0, void 0, function* () {
+      const publicSigningKey = yield crypto.subtle.exportKey('jwk', signingKey);
+      return {
+        x: publicSigningKey.x,
+        y: publicSigningKey.y
+      };
+    });
     /**
-     * Export public key as der
+     * Sign JSON object with signing key
      *
      * ```typescript
-     * const b64der: string = await exportPublicKeyAsDer(publicKey);
+     * const signature: string = await sign(signingKey, data);
      * ```
      */
 
-    function exportPublicKey(key) {
-      return __awaiter(this, void 0, void 0, function* () {
-        const exported = yield window.crypto.subtle.exportKey("spki", key);
-        return b64encode(exported);
-      });
-    }
-    /**
-     * Export public key as der
-     *
-     * ```typescript
-     * const b64der: string = await exportPublicKeyAsDer(publicKey);
-     * ```
-     */
-
-    function publicKeyFromDer(key) {
-      return __awaiter(this, void 0, void 0, function* () {
-        const exported = yield window.crypto.subtle.exportKey("spki", key);
-        return spkiToPEM(exported);
-      });
-    }
-    const sign = (identity, secret, data) => __awaiter(void 0, void 0, void 0, function* () {
-      const signingKey = yield importSigningKey(identity, secret);
+    const sign = (signingKey, data) => __awaiter(void 0, void 0, void 0, function* () {
       const dataBuffer = new TextEncoder().encode(JSON.stringify(data));
       const signatureBuffer = yield crypto.subtle.sign({
         name: "ECDSA",
@@ -221,7 +133,8 @@ var Identity = (function (exports) {
           name: "SHA-256"
         }
       }, signingKey, dataBuffer);
-      return b64encode(signatureBuffer);
+      const u8 = new Uint8Array(signatureBuffer);
+      return btoa(String.fromCharCode.apply(null, u8));
     });
     /**
      * Verify signature on JSON object
@@ -231,25 +144,30 @@ var Identity = (function (exports) {
      * ```
      */
 
-    const verify = (identity, signature, data) => __awaiter(void 0, void 0, void 0, function* () {
-      const key = yield importPublicKey(identity);
-      const dataBuffer = new TextEncoder().encode(JSON.stringify(data));
+    const verifySignature = (identity, signature, data) => __awaiter(void 0, void 0, void 0, function* () {
+      const key = yield crypto.subtle.importKey('jwk', Object.assign({
+        crv: "P-256",
+        ext: true,
+        kty: "EC"
+      }, identity), {
+        name: 'ECDSA',
+        namedCurve: "P-256"
+      }, true, ["sign"]);
+      const u8data = new TextEncoder().encode(JSON.stringify(data));
+      const u8signature = new Uint8Array(atob(signature).split('').map(c => c.charCodeAt(0)));
       return crypto.subtle.verify({
         name: "ECDSA",
         hash: {
           name: "SHA-256"
         }
-      }, key, b64decode(signature), dataBuffer);
+      }, key, u8signature, u8data);
     });
 
-    exports.exportPublicKey = exportPublicKey;
-    exports.exportSigningKey = exportSigningKey;
-    exports.generate = generate;
-    exports.importPublicKey = importPublicKey;
+    exports.createIdentity = createIdentity;
+    exports.exportIdentity = exportIdentity;
     exports.importSigningKey = importSigningKey;
-    exports.publicKeyFromDer = publicKeyFromDer;
     exports.sign = sign;
-    exports.verify = verify;
+    exports.verifySignature = verifySignature;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
