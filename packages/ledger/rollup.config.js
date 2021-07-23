@@ -24,6 +24,7 @@ export default [
     output: [
       { file: pkg.main, format: 'cjs', exports: 'default' },
       { file: pkg.module, format: 'es' },
+      { file: 'dist/concords-ledger.system.js', format: 'system' },
       { file: 'dist/concords-ledger.js', format: 'iife', name: 'Ledger', exports: 'default' },
       { file: 'dist/concords-ledger.min.js', format: 'iife', name: 'Ledger', exports: 'default', plugins: [terser()] }
     ]
