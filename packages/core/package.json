@@ -1,7 +1,7 @@
 {
   "name": "@concords/core",
-  "version": "2.0.9",
-  "description": "Blochain utils",
+  "version": "2.1.0",
+  "description": "Blockchain utils",
   "repository": {
     "type": "git",
     "url": "https://github.com/concords/ledger"
