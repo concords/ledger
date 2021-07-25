@@ -23,6 +23,7 @@ export default [
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
+      { file: 'dist/build/concords-core.system.js', format: 'system' },
       { file: 'dist/build/concords-core.js', format: 'iife', name: "Core" }
     ]
   }

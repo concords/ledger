@@ -24,6 +24,7 @@ export default [
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
+      { file: 'dist/concords-identity.system.js', format: 'system' },
       { file: 'dist/concords-identity.js', format: 'iife', name: "Identity" },
       { file: 'dist/concords-identity.min.js', format: 'iife', name: 'Identity', plugins: [terser()] }
     ]
